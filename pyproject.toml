@@ -1,0 +1,89 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "consolidated-agent-release-deployment"
+version = "0.0.1"
+description = "Checks AI agents for compliance before they are deployed through a CI/CD pipeline."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+requires-python = ">=3.11"
+authors = [{ name = "Jahanvi Joshi" }]
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Typing :: Typed",
+]
+# Runtime dependencies stay empty until an ADR approves one (see CLAUDE.md).
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8",
+  "pytest-cov>=5",
+  "ruff>=0.6",
+  "mypy>=1.11",
+  "pre-commit>=3.7",
+]
+
+[project.scripts]
+consolidated-agent-release-deployment = "consolidated_agent_release_deployment.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/consolidated_agent_release_deployment"]
+
+# ---------- pytest ----------
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+addopts = [
+  "-ra",
+  "--strict-markers",
+  "--strict-config",
+  "--cov=consolidated_agent_release_deployment",
+  "--cov=sample_agents",
+  "--cov-report=term-missing",
+  "--cov-fail-under=90",
+]
+filterwarnings = ["error"]
+
+# ---------- ruff ----------
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "sample_agents", "tests"]
+
+[tool.ruff.lint]
+select = [
+  "E", "W",   # pycodestyle
+  "F",        # pyflakes
+  "I",        # isort
+  "B",        # bugbear
+  "UP",       # pyupgrade
+  "S",        # bandit (security)
+  "SIM",      # simplify
+  "RUF",      # ruff-specific
+  "PT",       # pytest style
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["consolidated_agent_release_deployment", "sample_agents"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]  # assert is how pytest works
+
+# ---------- mypy ----------
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src", "sample_agents", "tests"]
+mypy_path = ["src", "."]
+explicit_package_bases = true
+warn_unreachable = true

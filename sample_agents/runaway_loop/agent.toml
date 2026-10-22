@@ -1,0 +1,6 @@
+name = "runaway_loop"
+purpose = "Exercises the step-budget check (S1-4). Declares a 5-step budget, then keeps searching."
+declared_tools = ["search"]
+max_steps = 5
+expected = "fail"
+expected_reason = "step_budget"
