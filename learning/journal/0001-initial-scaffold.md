@@ -105,12 +105,34 @@ These all happened while preparing this push and are worth recognizing:
    the checks were re-run afterwards to prove nothing broke.
 8. **Windows line endings.** `.gitattributes` was added so files edited on Windows
    don't show every line as changed.
+9. **An accidental second commit leaked the real email.** After the push, a second
+   commit `826c8cc` ("environment setup") landed on `main` from the Windows PC. It
+   changed only one thing — it removed the *executable* flag from
+   `scripts/protect-main.sh` (unzipping on Windows drops that flag, and Git recorded the
+   loss) — but it was stamped `unknown <real Gmail address>` because Git's name/email
+   weren't set on that PC yet. With the repo public, that email became visible.
+   **Fix:** while `main` was still unprotected, it was reset back to `f1c54de` with
+   `git push --force-with-lease=main:826c8cc ...`, which only succeeds if GitHub's
+   `main` is still exactly `826c8cc` — so nothing else could be overwritten.
+   **Lessons:** run `git config --global --list` and check `user.name`/`user.email`
+   *before* the first commit on a new PC; turn on GitHub's **Block command line pushes
+   that expose my email**; and remember that a rewritten commit can stay reachable by its
+   exact link for a while, so prevention beats cleanup ([topic 06](../topics/06-security-basics.md)).
+10. **Giving Claude access to the repo took two separate GitHub permissions.**
+    *Authorized GitHub Apps* lets Claude act as you; *Installed GitHub Apps* decides
+    *which repositories* it can touch. Only the second was missing. Searching the
+    GitHub Marketplace was the wrong place — it lists third-party add-ons, not the
+    settings of apps you already use.
 
 ## How to verify it yourself
 
 1. On GitHub, the repo shows the folders above and **1 commit** by `jahanvi15`.
 2. **Actions** tab → the **CI** run shows five green jobs: four `checks (py3.x)` and `ci-pass`.
 3. Open a `checks (py3.13)` job → **Tests** step → `35 passed` and coverage ≈ 99 %.
+   The first real run took 38 seconds and passed on every Python version.
+4. The run shows a yellow **annotation** saying `ubuntu-latest` is moving to Ubuntu 26.
+   That's an informational notice from GitHub about the runner machine, not a failure;
+   our checks don't depend on the Ubuntu version.
 
 ## Further reading
 

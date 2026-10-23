@@ -54,6 +54,12 @@ GitHub → **Settings → Emails**:
 - **Block command line pushes that expose my email** — rejects a push (error `GH007`)
   if a commit accidentally carries the real address.
 
+**This actually happened (journal 0001, problem 9):** a commit made on a new PC before
+`user.name`/`user.email` were set went out as `unknown <real email>`. It was removed by
+resetting `main` before protection was switched on, but GitHub can keep a removed commit
+viewable by its exact link for a while. Prevention: check `git config --global --list`
+on every new machine, and keep the "Block command line pushes" box ticked.
+
 ## 5. Protect `main`
 
 Branch protection means no one — including a compromised token or a mistaken AI — can

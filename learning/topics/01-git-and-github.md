@@ -62,7 +62,20 @@ git config --global user.email "99080522+jahanvi15@users.noreply.github.com"
 private **noreply** address, so the real email never appears in public history
 (see [topic 06](06-security-basics.md)).
 
-Check what's set: `git config --global --list`.
+Check what's set: `git config --global --list`. **Do this on every new computer before
+the first commit.** If the name/email are missing, Git may fall back to something like
+`unknown <your-real-email>` — which is exactly how a real email leaked in journal 0001.
+
+## Giving an app (like Claude) access to a repository
+
+GitHub separates two permissions, both under **Settings → Applications**:
+
+- **Authorized GitHub Apps** — you allowed the app to sign in and act *as you*.
+- **Installed GitHub Apps** — *which repositories* the app may touch
+  (**Configure → Repository access**). Prefer **Only select repositories**.
+
+An app needs both. The **Marketplace** is a different thing: a catalogue of third-party
+tools to install, not the settings of apps you already use.
 
 ## Commit messages
 
@@ -108,7 +121,7 @@ git remote add origin https://github.com/jahanvi15/consolidated_agent_release_de
 
 | Command | Why it's dangerous |
 |---------|--------------------|
-| `git push --force` | Overwrites GitHub's history with yours, deleting commits that exist only there. Blocked on `main` once protection is on. |
+| `git push --force` | Overwrites GitHub's history with yours, deleting commits that exist only there. Blocked on `main` once protection is on. If you must force-push, prefer `git push --force-with-lease`, which refuses if GitHub has commits you haven't seen. |
 | `git reset --hard` | Throws away all uncommitted changes in your folder. No undo. |
 | `git clean -fd` | Deletes every untracked file. No undo. |
 | `git commit --amend` | Rewrites the last commit. Fine before pushing; causes trouble after. |

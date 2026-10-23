@@ -13,6 +13,9 @@ problem, the options considered, what was chosen and the consequences. Ours live
 takes actions through **tools** (searching, reading files, sending email). This project
 checks agents for rule-breaking before they are deployed.
 
+**Annotation** — A note GitHub Actions attaches to a run or to a line of code: an error,
+a warning, or (like the Ubuntu 26 notice) plain information.
+
 **Apache License 2.0** — The open-source license this project uses. Anyone may use,
 change and sell the code, but must keep the copyright and license notices. It also
 grants patent rights. See `docs/decisions/0003-license-apache-2.md`.
@@ -74,6 +77,14 @@ hands ready-made objects to tests (like `tmp_path`, a fresh temporary folder).
 history, discarding commits that only exist on GitHub. Dangerous; blocked on `main`
 once protection is on. We used it exactly once, for the first push.
 
+**Executable bit (file mode)** — A flag that marks a file as a runnable program on
+Mac/Linux. Git records it. Windows doesn't have it, so unzipping on Windows can drop it
+and Git may see that as a change (journal 0001, problem 9).
+
+**Force-with-lease** (`git push --force-with-lease`) — A safer force push: it only
+overwrites GitHub's branch if that branch is still exactly what you expect, so you can't
+accidentally destroy someone else's new commits.
+
 **Formatter** — A tool that rewrites code layout (spacing, line breaks, quotes) into
 one consistent style automatically. We use `ruff format`.
 
@@ -82,6 +93,10 @@ computers. It runs on your machine.
 
 **GitHub** — A website that hosts Git repositories and adds collaboration features:
 pull requests, Actions, issues, security scanning.
+
+**GitHub App (installed vs authorized)** — An integration such as Claude. *Authorized*
+means it may act as you; *installed* decides which repositories it can access. It needs
+both to work on a repo.
 
 **GitHub Actions** — GitHub's built-in automation service. It reads YAML files in
 `.github/workflows/` and runs their jobs on cloud machines when events happen (a push,
