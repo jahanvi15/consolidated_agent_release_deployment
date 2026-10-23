@@ -82,9 +82,10 @@ I'm a new contributor to this repository. My name for commits is "<Your Name>"
 and my GitHub noreply email is "<12345678+yourname@users.noreply.github.com>".
 Set these as the git identity for every commit you make for me.
 
-Before doing anything: read CLAUDE.md, CONTRIBUTING.md, BACKLOG.md,
-docs/decisions/README.md and learning/README.md, then summarize in plain words what
-this project is, what's in progress, and which backlog items are free to pick up.
+Before doing anything: read docs/project-context.md, CLAUDE.md, CONTRIBUTING.md,
+BACKLOG.md, docs/decisions/README.md and learning/README.md. Then summarize in plain
+words: what we are building and why, the roadmap stages, where the project is now,
+which open questions are still undecided, and which backlog items are free to pick up.
 I'm a beginner: explain every technical step, and ask me with options whenever
 there's a decision to make.
 ```
@@ -93,6 +94,7 @@ Everything decided so far lives in the repository, not in anyone's chat history:
 
 | Where | What it tells you |
 |-------|-------------------|
+| `docs/project-context.md` | **Start here:** what we're building, the 13 features, the roadmap, status, open questions |
 | `CLAUDE.md` | Rules for Claude and humans |
 | `BACKLOG.md` | What's done, in progress (and by whom), and next |
 | `docs/decisions/` | Every decision and why (ADRs) |

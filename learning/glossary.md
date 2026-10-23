@@ -23,14 +23,20 @@ grants patent rights. See `docs/decisions/0003-license-apache-2.md`.
 **assert** — A Python statement that says "this must be true". In tests, a failed
 `assert` makes the test fail. Example: `assert 1 + 1 == 2`.
 
-**Backlog** — The ordered to-do list for the project. Ours is `BACKLOG.md`.
+**Audit record / audit trail** — A permanent, append-only log of who did what and when
+(released, checked, approved). Feature 9; a basic version starts in Stage 1.
 
-**Branch** — An independent line of work in Git. `main` is the official version; new
-work happens on other branches and is merged in through a **pull request**.
+**Backlog** — The ordered to-do list for the project. Ours is `BACKLOG.md`.
 
 **Branch protection / Ruleset** — GitHub settings that put rules on a branch, such as
 "no direct pushes" and "checks must pass before merging". A **ruleset** is GitHub's
 newer, more flexible way to define these rules.
+
+**Branch** — An independent line of work in Git. `main` is the official version; new
+work happens on other branches and is merged in through a **pull request**.
+
+**Business system** — An outside system an agent connects to: a CRM, ticketing tool,
+database. Feature 13 builds fake ones for testing.
 
 **CI (Continuous Integration)** — Automatically building and testing the code every
 time someone pushes a change, so problems are caught immediately.
@@ -65,16 +71,16 @@ low coverage proves parts of it are untested.
 Windows that signs you in to GitHub through the browser and remembers it securely, so
 you never type a password into the terminal.
 
-**Dependency** — Someone else's code that our code needs. **Runtime** dependencies are
-needed to run the product (we have none); **dev** dependencies are only needed to build
-and test it (pytest, ruff, mypy…).
-
 **Dataclass (frozen)** — A Python class defined mostly by its named fields
 (`@dataclass`). *Frozen* means its values can't be changed after creation.
 `AgentManifest` is one.
 
 **Dependabot** — A GitHub service that opens pull requests to update our dependencies
 and GitHub Actions to newer versions. Configured in `.github/dependabot.yml`.
+
+**Dependency** — Someone else's code that our code needs. **Runtime** dependencies are
+needed to run the product (we have none); **dev** dependencies are only needed to build
+and test it (pytest, ruff, mypy…).
 
 **Deterministic** — Gives exactly the same result every time it runs with the same
 input. Our sample agents are deterministic so tests never randomly fail.
@@ -85,6 +91,16 @@ files in your folder directly; edits take effect without reinstalling.
 **Entrypoint** — The function a program starts from. In `agent.toml`,
 `entrypoint = "agent.py:run"` means "call the `run` function in `agent.py`".
 
+**Environment** — A place where software runs, such as *testing* or *live*, each with its
+own settings. Feature 5 moves agents safely between them.
+
+**Executable bit (file mode)** — A flag that marks a file as a runnable program on
+Mac/Linux. Git records it. Windows doesn't have it, so unzipping on Windows can drop it
+and Git may see that as a change (journal 0001, problem 9).
+
+**Feature number (F1, F2…)** — The plan's numbers for the 13 product features, used in
+backlog IDs (`F1-3` = feature 1, item 3). See `docs/project-context.md`.
+
 **Fixture (test fixture)** — Anything a test needs that's prepared in advance. Our
 sample agents are fixtures. In pytest, a "fixture" is also a specific feature that
 hands ready-made objects to tests (like `tmp_path`, a fresh temporary folder).
@@ -92,10 +108,6 @@ hands ready-made objects to tests (like `tmp_path`, a fresh temporary folder).
 **Force push** (`git push --force`) — Replaces the history on GitHub with your local
 history, discarding commits that only exist on GitHub. Dangerous; blocked on `main`
 once protection is on. We used it exactly once, for the first push.
-
-**Executable bit (file mode)** — A flag that marks a file as a runnable program on
-Mac/Linux. Git records it. Windows doesn't have it, so unzipping on Windows can drop it
-and Git may see that as a change (journal 0001, problem 9).
 
 **Force-with-lease** (`git push --force-with-lease`) — A safer force push: it only
 overwrites GitHub's branch if that branch is still exactly what you expect, so you can't
@@ -110,16 +122,19 @@ one consistent style automatically. We use `ruff format`.
 **Git** — The program that records the history of a project and syncs it between
 computers. It runs on your machine.
 
-**GitHub** — A website that hosts Git repositories and adds collaboration features:
-pull requests, Actions, issues, security scanning.
+**GitHub Actions** — GitHub's built-in automation service. It reads YAML files in
+`.github/workflows/` and runs their jobs on cloud machines when events happen (a push,
+a pull request…).
 
 **GitHub App (installed vs authorized)** — An integration such as Claude. *Authorized*
 means it may act as you; *installed* decides which repositories it can access. It needs
 both to work on a repo.
 
-**GitHub Actions** — GitHub's built-in automation service. It reads YAML files in
-`.github/workflows/` and runs their jobs on cloud machines when events happen (a push,
-a pull request…).
+**GitHub** — A website that hosts Git repositories and adds collaboration features:
+pull requests, Actions, issues, security scanning.
+
+**Gradual release (canary)** — Releasing a new version to a few users first and widening
+only if it behaves well (feature 6).
 
 **Hash (commit hash / SHA)** — The unique ID of a commit, a long string of letters and
 digits. The first 7 characters (e.g. `f1c54de`) are usually enough to identify it.
@@ -131,13 +146,13 @@ machine that is deleted afterwards).
 **Linter** — A tool that reads code without running it and flags likely bugs, unsafe
 patterns and style problems. We use `ruff check`.
 
-**Manifest schema version** — The `schema_version` number in a manifest. It changes
-only when the format changes incompatibly, so old files are recognized, not misread.
-
 **main** — The name of the official branch. Everything on `main` should always work.
 
 **Makefile / make** — A file of named shortcuts (`make check`, `make install`) run by the
 `make` program. Note: `make` is not installed on Windows by default.
+
+**Manifest schema version** — The `schema_version` number in a manifest. It changes
+only when the format changes incompatibly, so old files are recognized, not misread.
 
 **Manifest** — A file describing something. Each sample agent's `agent.toml` is its
 manifest: name, allowed tools, step limit, expected result.
@@ -145,21 +160,17 @@ manifest: name, allowed tools, step limit, expected result.
 **Matrix (build matrix)** — Running the same CI job several times with different
 settings. We run the checks on Python 3.11, 3.12, 3.13 and 3.14.
 
-**Merge** — Combining the changes from one branch into another, e.g. a feature branch
-into `main`.
+**Merge commit** — A special commit with two parents that joins a branch's history into
+another branch. Our chosen way to merge pull requests (ADR 0006).
 
 **Merge conflict** — When two branches changed the same lines, Git can't combine them
 automatically and asks a person to choose. Marked in the file with `<<<<<<<`, `=======`,
 `>>>>>>>`. See topic 09.
 
-**Merge commit** — A special commit with two parents that joins a branch's history into
-another branch. Our chosen way to merge pull requests (ADR 0006).
+**Merge** — Combining the changes from one branch into another, e.g. a feature branch
+into `main`.
 
-**Regular expression (regex)** — A compact pattern for matching text, e.g.
-`[a-z][a-z0-9_-]{0,63}`. Python's `re` module runs them. See topic 08.
-
-**Rebase** — Re-creating commits on top of a different starting point, giving them new
-IDs. Useful but rewrites history; never rebase commits others already have.
+**Mermaid** — A way to write diagrams as text in Markdown (` ```mermaid `); GitHub draws them.
 
 **mypy** — A **type checker** for Python. It reads type hints and reports places where
 the wrong kind of value could be used. We run it in `strict` mode.
@@ -174,12 +185,12 @@ published in the history.
 **Parse, don't validate** — Design rule: convert untrusted input into a trusted, typed
 object once, at the edge of the program, so the rest of the code never re-checks it.
 
-**Path traversal** — An attack where input like `../../secret` makes a program reach
-files outside the folder it should stay in. Our manifest rejects `..` and absolute paths.
-
 **PAT (Personal Access Token)** — A password-like string that lets a program act on
 GitHub as you, limited to specific repositories and permissions. Treat it like a
 password; never commit it.
+
+**Path traversal** — An attack where input like `../../secret` makes a program reach
+files outside the folder it should stay in. Our manifest rejects `..` and absolute paths.
 
 **pip** — Python's package installer. `pip install pytest` downloads and installs pytest.
 
@@ -198,7 +209,21 @@ version, dependencies, and the settings for tools like pytest, ruff and mypy.
 **pytest** — The testing tool we use. It finds files named `test_*.py`, runs every
 function named `test_*`, and reports which passed or failed.
 
+**Rebase** — Re-creating commits on top of a different starting point, giving them new
+IDs. Useful but rewrites history; never rebase commits others already have.
+
+**Regular expression (regex)** — A compact pattern for matching text, e.g.
+`[a-z][a-z0-9_-]{0,63}`. Python's `re` module runs them. See topic 08.
+
+**Release management** — Controlling how new versions reach users: recording them,
+checking them, approving them, rolling them out gradually and undoing bad ones. What
+this project builds, for AI agents.
+
 **Repository (repo)** — A project folder plus its complete Git history.
+
+**Roadmap** — The planned order of work. Ours: Stages 0–7 (ADR 0009).
+
+**Rollback** — Undoing a release by returning to the previous good version (feature 7).
 
 **ruff** — A fast Python tool that is both our **linter** (`ruff check`) and our
 **formatter** (`ruff format`).
@@ -231,6 +256,9 @@ unknown fields are errors and every problem is reported at once.
 
 **Version (semantic versioning)** — A number like `0.0.1` meaning MAJOR.MINOR.PATCH.
 `0.x` means "early development, anything may change".
+
+**Version record** — Feature 1: a permanent record of one exact state of an agent, so it
+can be compared, checked, approved and released. Everything else reads from it.
 
 **Virtual environment (venv)** — A private folder of Python packages for one project
 (ours is `.venv/`), so projects don't interfere with each other or with system Python.

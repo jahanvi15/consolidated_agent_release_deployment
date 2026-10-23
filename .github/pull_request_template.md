@@ -1,6 +1,6 @@
 ## What and why
 
-<!-- One or two sentences. Link the backlog item, e.g. "Closes S1-2". -->
+<!-- One or two sentences. Link the backlog item, e.g. "Closes F1-3". -->
 
 ## Checklist
 

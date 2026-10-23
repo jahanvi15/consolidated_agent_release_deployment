@@ -18,18 +18,19 @@ describing what changed and what you can learn from it.
 
 ## Suggested reading order for a complete beginner
 
-1. [Glossary](glossary.md) — skim it once; don't memorize.
-2. [Topic 01 — Git and GitHub](topics/01-git-and-github.md)
-3. [Journal 0001 — the first push](journal/0001-initial-scaffold.md)
-4. [Topic 02 — How a Python project is laid out](topics/02-python-project-layout.md)
-5. [Topic 03 — Automated checks (CI)](topics/03-automated-checks-ci.md)
-6. [Topic 04 — Testing with pytest](topics/04-testing-with-pytest.md)
-7. [Topic 05 — Code quality tools: ruff and mypy](topics/05-code-quality-tools.md)
-8. [Topic 06 — Security basics for a code project](topics/06-security-basics.md)
-9. [Topic 07 — Decision records, backlog and working rules](topics/07-decisions-backlog-rules.md)
-10. [Topic 08 — Designing and validating an input format](topics/08-validating-input.md)
-11. [Topic 09 — Working with other people on one repository](topics/09-collaborating.md)
-12. Every later journal entry, in number order.
+1. [Project context](../docs/project-context.md) — what we're building and why.
+2. [Glossary](glossary.md) — skim it once; don't memorize.
+3. [Topic 01 — Git and GitHub](topics/01-git-and-github.md)
+4. [Journal 0001 — the first push](journal/0001-initial-scaffold.md)
+5. [Topic 02 — How a Python project is laid out](topics/02-python-project-layout.md)
+6. [Topic 03 — Automated checks (CI)](topics/03-automated-checks-ci.md)
+7. [Topic 04 — Testing with pytest](topics/04-testing-with-pytest.md)
+8. [Topic 05 — Code quality tools: ruff and mypy](topics/05-code-quality-tools.md)
+9. [Topic 06 — Security basics for a code project](topics/06-security-basics.md)
+10. [Topic 07 — Decision records, backlog and working rules](topics/07-decisions-backlog-rules.md)
+11. [Topic 08 — Designing and validating an input format](topics/08-validating-input.md)
+12. [Topic 09 — Working with other people on one repository](topics/09-collaborating.md)
+13. Every later journal entry, in number order.
 
 ## Journal index
 
@@ -39,6 +40,7 @@ describing what changed and what you can learn from it.
 | [0002](journal/0002-learning-notes.md) | 2026-10-23 | PR from branch `docs/learning-notes` | This learning folder, and the rule that every push adds a journal entry |
 | [0003](journal/0003-manifest-schema.md) | 2026-10-23 | PR from branch `feat/s1-1-manifest-schema` | First product feature: the `agent.toml` format, validated strictly with every error listed at once |
 | [0004](journal/0004-contributor-onboarding.md) | 2026-10-24 | PR from branch `docs/s0-8-contributor-onboarding` | Getting the repo ready for a second contributor: `CONTRIBUTING.md`, CODEOWNERS, team rules |
+| [0005](journal/0005-project-context-and-roadmap.md) | 2026-10-24 | Added to PR #3 | The product plan written down: 13 features, 7 stages, status, open questions; backlog realigned |
 
 ## Rules for this folder
 

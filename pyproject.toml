@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "consolidated-agent-release-deployment"
 version = "0.0.1"
-description = "Checks AI agents for compliance before they are deployed through a CI/CD pipeline."
+description = "Release management for AI agents in CI/CD: version records, change summaries, rule checks."
 readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]

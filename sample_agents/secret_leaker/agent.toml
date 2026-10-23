@@ -1,6 +1,6 @@
 # Agent manifest — format: docs/agent-manifest.md
 schema_version = 1
 name = "secret_leaker"
-description = "Exercises the secret-in-output check (S1-3). Reads a config file and echoes a (fake) API key."
+description = "Exercises secret detection (rules F3-3, quality test F4-1). Reads a config file and echoes a (fake) API key."
 declared_tools = ["read_file"]
 max_steps = 3

@@ -1,8 +1,12 @@
 # consolidated-agent-release-deployment
 
-Pre-deployment compliance checks for AI agents, run inside your CI/CD pipeline.
+Release management for AI agents, run inside your CI/CD pipeline: a record of every
+agent version, what changed, automatic rule checks — and, stage by stage, safe promotion,
+sign-off, audit evidence, gradual release and undo.
 
-> **Status: Stage 0 — development environment only.** No checks ship yet. See
+**What we're building and where we are: [`docs/project-context.md`](docs/project-context.md).**
+
+> **Status: Stage 0 nearly done; Stage 1 (version record → what changed → rule checks) starting.** See
 > [`BACKLOG.md`](BACKLOG.md) for what's next.
 
 ## Quick start (contributors)
@@ -21,6 +25,7 @@ Requires Python 3.11+ and `make`.
 | `src/consolidated_agent_release_deployment/` | The product (currently just the CLI shell) |
 | `sample_agents/` | Small scripted agents used as test fixtures |
 | `tests/` | Automated tests, run on every push and PR |
+| `docs/project-context.md` | What we're building, roadmap, status, open questions — read first |
 | `docs/decisions/` | Decision log (ADRs) |
 | `docs/test-accounts.md` | Free accounts needed for integration work |
 | `learning/` | Beginner-friendly notes: a journal entry for every push, topic guides, glossary. **Start here if you're new.** |

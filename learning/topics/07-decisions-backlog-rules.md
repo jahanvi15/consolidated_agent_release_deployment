@@ -35,7 +35,8 @@ choosing a library, a file format, a public interface, a security trade-off.
 - **Stage N** — planned later work
 - **Inbox** — ideas not yet sorted
 
-Each item has an ID (`S1-2` = Stage 1, item 2) used in branch names and PR titles, so
+Each item has an ID (`S0-4` = Stage 0 item 4; `F1-3` = feature 1, item 3 — feature
+numbers come from the roadmap in `docs/project-context.md`) used in branch names and PR titles, so
 you can trace any code change back to why it was planned. Items move between sections
 instead of being deleted, so the file is also a record of what was done.
 

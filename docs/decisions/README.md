@@ -14,5 +14,6 @@ old one's status to `Superseded by NNNN`.
 | 0006 | [Merge commits; one branch per feature as work starts](0006-merge-commits-and-branch-per-feature.md) | Accepted | 2026-10-23 |
 | 0007 | [Agent manifest format: flat TOML, versioned, strict](0007-agent-manifest-format.md) | Proposed | 2026-10-23 |
 | 0008 | [Keep 0 required approvals with two contributors](0008-two-contributors-zero-required-approvals.md) | Accepted | 2026-10-24 |
+| 0009 | [Follow the staged roadmap (features 1–13, Stages 0–7)](0009-staged-roadmap.md) | Accepted | 2026-10-24 |
 
 New ADR: copy [`0000-template.md`](0000-template.md).

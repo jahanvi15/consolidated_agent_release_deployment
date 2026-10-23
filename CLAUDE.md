@@ -5,9 +5,14 @@ changes this repository. A human contributor should follow them too.
 
 ## What this project is
 
-`consolidated-agent-release-deployment` checks AI agents for compliance problems *before* they are deployed
-through a CI/CD pipeline. First pipeline platform: **GitHub Actions**. Language: **Python 3.11+**.
-License: **Apache-2.0**. See `docs/decisions/` for why.
+`consolidated-agent-release-deployment` is **release management for AI agents**, run inside CI/CD
+pipelines: a record of every agent version, a "what changed" summary, automatic rule checks,
+and later dependency maps, quality tests, environment moves, sign-off, audit evidence,
+change watching, gradual release and undo. First pipeline platform: **GitHub Actions**.
+Language: **Python 3.11+**. License: **Apache-2.0**.
+
+**Read [`docs/project-context.md`](docs/project-context.md) before starting any work.** It has
+the 13 features, the 7-stage roadmap (ADR 0009), current status and open questions.
 
 ## Hard rules (never break these)
 
@@ -42,7 +47,13 @@ License: **Apache-2.0**. See `docs/decisions/` for why.
 
 ## How to work
 
-- **Read first:** `BACKLOG.md` (what's next), `docs/decisions/` (what's settled).
+- **Read first:** `docs/project-context.md` (what and why), `BACKLOG.md` (what's next),
+  `docs/decisions/` (what's settled).
+- **Build in roadmap order.** Pick items from the current stage in `BACKLOG.md`; don't
+  start later-stage features early. Items marked **Decide** need the owner's answer
+  first — ask with options, then record an ADR.
+- **Keep `docs/project-context.md` current.** Update it in the same PR when a stage's
+  status changes, an open question is answered, or a feature's scope changes.
 - **Pick work from `BACKLOG.md`.** Move the item to *In progress* when you start and to
   *Done* (with the PR link) when merged. New ideas go to *Inbox*, not straight into code.
 - **Decisions:** if you make a choice someone could reasonably disagree with
@@ -69,7 +80,7 @@ Claude. Setup for newcomers: `CONTRIBUTING.md`.
   their name and GitHub **noreply** email (`<id>+<username>@users.noreply.github.com`)
   before the first commit. If you don't know it, ask — never use a real personal email.
 - **Claim before you start.** Put the backlog item under *In progress* with the person's
-  GitHub username (`[S1-3] ... — @username, branch feat/s1-3-...`). Don't start an item
+  GitHub username (`[F1-3] ... — @username, branch feat/f1-3-...`). Don't start an item
   someone else has claimed.
 - **Start from the latest `main`:** `git fetch origin && git switch -c <branch> origin/main`
   (or from an unmerged PR branch you depend on, per ADR 0006).

@@ -4,7 +4,7 @@
 |---|---|
 | **Date** | YYYY-MM-DD |
 | **Push / PR** | branch name, PR number or commit hash |
-| **Backlog item** | e.g. S1-2, or "none" |
+| **Backlog item** | e.g. F1-3, or "none" |
 | **Read first** | links to topics or earlier entries this builds on |
 
 ## In one paragraph
