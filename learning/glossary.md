@@ -45,6 +45,15 @@ rather than clicking buttons. Our product is a CLI:
 
 **Clone** — Downloading a complete copy of a repository, including all of its history.
 
+**Code owners (CODEOWNERS)** — A file (`.github/CODEOWNERS`) mapping paths to people
+who are automatically requested to review PRs touching them.
+
+**Code review** — Another person reading a pull request's changes and commenting,
+approving, or requesting changes before it merges.
+
+**Collaborator** — A person the owner invited with write access to a repository. On
+personal-account repos there's one level: push branches, merge PRs, no settings.
+
 **Commit** — A saved snapshot of changes in Git, with a message, an author and a unique
 ID (a **hash**, like `f1c54de`). The project's history is a chain of commits.
 
@@ -92,6 +101,9 @@ and Git may see that as a change (journal 0001, problem 9).
 overwrites GitHub's branch if that branch is still exactly what you expect, so you can't
 accidentally destroy someone else's new commits.
 
+**Fork** — Your own copy of someone else's repository on GitHub, used to propose changes
+without having access to the original. We use collaborators instead.
+
 **Formatter** — A tool that rewrites code layout (spacing, line breaks, quotes) into
 one consistent style automatically. We use `ruff format`.
 
@@ -135,6 +147,10 @@ settings. We run the checks on Python 3.11, 3.12, 3.13 and 3.14.
 
 **Merge** — Combining the changes from one branch into another, e.g. a feature branch
 into `main`.
+
+**Merge conflict** — When two branches changed the same lines, Git can't combine them
+automatically and asks a person to choose. Marked in the file with `<<<<<<<`, `=======`,
+`>>>>>>>`. See topic 09.
 
 **Merge commit** — A special commit with two parents that joins a branch's history into
 another branch. Our chosen way to merge pull requests (ADR 0006).

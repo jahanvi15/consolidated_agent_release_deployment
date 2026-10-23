@@ -56,8 +56,30 @@ License: **Apache-2.0**. See `docs/decisions/` for why.
   standard library first, small pure functions, no global state, no `print` in library
   code (CLI only).
 - **Sample agents** (`sample_agents/`) are test fixtures, not product code. Each has an
-  `agent.toml` manifest and an `agent.py`. Each one exists to exercise a specific check;
-  say which in its manifest `purpose`.
+  `agent.toml` manifest (format: `docs/agent-manifest.md`), an `agent.py`, and an
+  `expected.toml` with the verdict the checks should reach. Each one exists to exercise a
+  specific check; say which in its manifest `description`.
+
+## Working with more than one person
+
+Two people (the owner `@jahanvi15` and a collaborator) work here, each through their own
+Claude. Setup for newcomers: `CONTRIBUTING.md`.
+
+- **Commit as the human you work for.** Set `git config user.name` and `user.email` to
+  their name and GitHub **noreply** email (`<id>+<username>@users.noreply.github.com`)
+  before the first commit. If you don't know it, ask — never use a real personal email.
+- **Claim before you start.** Put the backlog item under *In progress* with the person's
+  GitHub username (`[S1-3] ... — @username, branch feat/s1-3-...`). Don't start an item
+  someone else has claimed.
+- **Start from the latest `main`:** `git fetch origin && git switch -c <branch> origin/main`
+  (or from an unmerged PR branch you depend on, per ADR 0006).
+- **Keep your branch current** by merging, not rebasing: `git fetch origin && git merge
+  origin/main` (or the PR's **Update branch** button). Resolve conflicts, then re-run
+  `make check`.
+- **Journal numbers can collide** when two PRs are open. Whoever merges second renumbers
+  their entry to the next free number and fixes its row in `learning/README.md`.
+- **Request the other person as reviewer** on every PR. Approvals aren't required
+  (ADR 0008), but never merge someone else's PR unless they ask.
 
 ## Commands
 

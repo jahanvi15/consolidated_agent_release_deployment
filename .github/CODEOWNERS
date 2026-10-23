@@ -1,0 +1,7 @@
+# Who is automatically requested to review changes to which files.
+# Syntax: <path pattern> <@github-username>...   — later lines take precedence.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Required approvals are 0 (ADR 0008), so this requests a review but doesn't block merging.
+
+*  @jahanvi15

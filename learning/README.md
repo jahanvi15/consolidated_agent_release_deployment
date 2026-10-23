@@ -1,5 +1,7 @@
 # Learning notes
 
+> **New contributor?** Do the setup in [`CONTRIBUTING.md`](../CONTRIBUTING.md) first, then come back here.
+
 This folder explains, in plain language, everything technical that happens in this
 project. It is written for a beginner: no prior knowledge of Git, Python tooling or
 CI/CD is assumed. Every time code is pushed, a new **journal entry** is added here
@@ -26,7 +28,8 @@ describing what changed and what you can learn from it.
 8. [Topic 06 — Security basics for a code project](topics/06-security-basics.md)
 9. [Topic 07 — Decision records, backlog and working rules](topics/07-decisions-backlog-rules.md)
 10. [Topic 08 — Designing and validating an input format](topics/08-validating-input.md)
-11. Every later journal entry, in number order.
+11. [Topic 09 — Working with other people on one repository](topics/09-collaborating.md)
+12. Every later journal entry, in number order.
 
 ## Journal index
 
@@ -35,6 +38,7 @@ describing what changed and what you can learn from it.
 | [0001](journal/0001-initial-scaffold.md) | 2026-10-23 | First push to `main` (commit `f1c54de`) | The empty-but-complete project skeleton: rules, checks, sample agents, docs |
 | [0002](journal/0002-learning-notes.md) | 2026-10-23 | PR from branch `docs/learning-notes` | This learning folder, and the rule that every push adds a journal entry |
 | [0003](journal/0003-manifest-schema.md) | 2026-10-23 | PR from branch `feat/s1-1-manifest-schema` | First product feature: the `agent.toml` format, validated strictly with every error listed at once |
+| [0004](journal/0004-contributor-onboarding.md) | 2026-10-24 | PR from branch `docs/s0-8-contributor-onboarding` | Getting the repo ready for a second contributor: `CONTRIBUTING.md`, CODEOWNERS, team rules |
 
 ## Rules for this folder
 

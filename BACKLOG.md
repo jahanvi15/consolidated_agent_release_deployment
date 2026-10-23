@@ -5,13 +5,12 @@ Format: `- [ID] Title — one-line outcome (stage)`
 
 ## In progress
 
-- [S1-1] Agent manifest schema — `agent.toml` validated with every error reported at once (branch `feat/s1-1-manifest-schema`)
-- [S0-7] Learning notes folder and journal-per-push rule — `learning/` exists; rule in `CLAUDE.md` (PR from `docs/learning-notes`)
+- [S0-8] Second-contributor onboarding — `CONTRIBUTING.md`, CODEOWNERS, team rules in `CLAUDE.md`, ADR 0008 — @jahanvi15, branch `docs/s0-8-contributor-onboarding`
+- [S1-1] Agent manifest schema — `agent.toml` validated with every error reported at once — @jahanvi15, PR #2
 
 ## Next up (Stage 0 — finish setup)
 
 - [S0-4] Create the free test accounts in `docs/test-accounts.md` — accounts exist, nothing committed
-- [S0-5] Add a CODEOWNERS file with your GitHub handle — reviews route to you
 - [S0-6] Enable secret scanning and push protection in repo settings — leaked keys are blocked
 
 ## Stage 1 — first check end to end (proposed, not yet planned)
@@ -27,6 +26,8 @@ Format: `- [ID] Title — one-line outcome (stage)`
 - [S0-1] Initial commit pushed to `main` (`f1c54de`)
 - [S0-2] `main` locked by ruleset `protect-main` (created in GitHub settings)
 - [S0-3] CI green on a pull request: PR #1 shows the required `ci-pass` check
+- [S0-7] Learning notes folder and journal-per-push rule — PR #1
+- [S0-5] CODEOWNERS file (`.github/CODEOWNERS`) — in the S0-8 PR
 
 ## Inbox (unsorted ideas)
 

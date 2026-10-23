@@ -26,12 +26,14 @@ Requires Python 3.11+ and `make`.
 | `learning/` | Beginner-friendly notes: a journal entry for every push, topic guides, glossary. **Start here if you're new.** |
 | `BACKLOG.md` | Planned and in-progress work |
 | `CLAUDE.md` | Rules Claude follows when changing this repo |
+| `CONTRIBUTING.md` | Step-by-step setup for a new contributor (and the maintainer's checklist) |
 | `scripts/protect-main.sh` | One-time setup of branch protection on GitHub |
 
 ## Contributing
 
-`main` is protected: branch, open a pull request, and wait for the `ci-pass` check.
-See [`CLAUDE.md`](CLAUDE.md) — the same rules apply to humans.
+New here? **Start with [`CONTRIBUTING.md`](CONTRIBUTING.md)** — account, Claude and
+workflow setup, step by step for beginners. `main` is protected: branch, open a pull
+request, and wait for the `ci-pass` check. Rules for humans and Claude: [`CLAUDE.md`](CLAUDE.md).
 
 ## License
 
