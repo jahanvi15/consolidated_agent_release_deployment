@@ -18,7 +18,7 @@ describing what changed and what you can learn from it.
 
 ## Suggested reading order for a complete beginner
 
-1. [Project context](../docs/project-context.md) — what we're building and why.
+1. [Project context](../docs/project-context.md) — what we're building and why; then [the features in detail](../docs/features.md).
 2. [Glossary](glossary.md) — skim it once; don't memorize.
 3. [Topic 01 — Git and GitHub](topics/01-git-and-github.md)
 4. [Journal 0001 — the first push](journal/0001-initial-scaffold.md)
@@ -41,6 +41,7 @@ describing what changed and what you can learn from it.
 | [0003](journal/0003-manifest-schema.md) | 2026-10-23 | PR from branch `feat/s1-1-manifest-schema` | First product feature: the `agent.toml` format, validated strictly with every error listed at once |
 | [0004](journal/0004-contributor-onboarding.md) | 2026-10-24 | PR from branch `docs/s0-8-contributor-onboarding` | Getting the repo ready for a second contributor: `CONTRIBUTING.md`, CODEOWNERS, team rules |
 | [0005](journal/0005-project-context-and-roadmap.md) | 2026-10-24 | Added to PR #3 | The product plan written down: 13 features, 7 stages, status, open questions; backlog realigned |
+| [0006](journal/0006-feature-descriptions.md) | 2026-10-24 | Added to PR #3 | Detailed description of every feature; decided vs proposed scope |
 
 ## Rules for this folder
 

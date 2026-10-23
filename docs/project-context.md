@@ -29,11 +29,13 @@ rollout and undo. It runs **inside a CI/CD pipeline**, starting with **GitHub Ac
 | **Business system** | An outside system an agent connects to, e.g. a CRM, ticketing tool or database. Which ones matter first is an [open question](#8-open-questions). |
 | **Environment** | Where an agent runs: e.g. *testing* and *live*. Each has its own connection settings. |
 | **Pipeline** | The automated steps (CI/CD) that test and release software. Ours plugs into GitHub Actions first. |
-| **Platform** | A system where agents are built or run. "One view across all platforms" means supporting several over time. |
+| **Platform** | Used by feature 11, "one view across all platforms". **Ambiguous:** pipeline platforms (GitHub Actions, Azure DevOps), agent platforms (where agents are built or hosted), or both — open question. |
 
 ## 3. The 13 features
 
 Numbers are the plan's feature numbers; they are referenced everywhere (backlog, ADRs, PRs).
+**Detailed descriptions** — problem, behaviour, examples, first-version scope, open
+questions for each: [`features.md`](features.md).
 
 | # | Feature | What it means | Stage | Needs |
 |---|---------|---------------|-------|-------|
@@ -112,7 +114,7 @@ Live status of every item: [`BACKLOG.md`](../BACKLOG.md).
 Not decided yet. Don't assume an answer — ask the owner, and record the decision as an ADR.
 
 1. **First users:** who runs the first version — the owners' own agents, a specific company, a type of team?
-2. **First agent platform (feature 11):** which platform's agents are supported first?
+2. **What "platform" means in feature 11, and which comes first:** pipeline platforms, agent platforms, or both?
 3. **First business systems:** which systems do early users' agents connect to? (Shapes 12, 13, 5, 10.)
 4. **Compliance scope of rule checks (3):** which rules first — security basics, personal data, a regulation (e.g. EU AI Act), company policies?
 5. **Where version records live (1):** files in the agent's repo, a separate store, a database? Needs an ADR before feature 1 is built.
@@ -141,6 +143,7 @@ than one person".
 | 2026-10-23 | Manifest format built (PR #2) | ADR 0007 (proposed), journal 0003 |
 | 2026-10-24 | Second contributor onboarding; 0 required approvals kept | ADR 0008, journal 0004 |
 | 2026-10-24 | Full 7-stage roadmap recorded; backlog realigned to it | ADR 0009, journal 0005 |
+| 2026-10-24 | Detailed feature descriptions written (proposed scope) | `features.md`, journal 0006 |
 
 ## 11. Keeping this document current
 

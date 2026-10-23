@@ -101,6 +101,9 @@ and Git may see that as a change (journal 0001, problem 9).
 **Feature number (F1, F2…)** — The plan's numbers for the 13 product features, used in
 backlog IDs (`F1-3` = feature 1, item 3). See `docs/project-context.md`.
 
+**Fingerprint (content hash)** — A short ID computed from content: identical content gives
+the same ID; any change gives a new one. Proposed as the ID of an agent version (feature 1).
+
 **Fixture (test fixture)** — Anything a test needs that's prepared in advance. Our
 sample agents are fixtures. In pytest, a "fixture" is also a specific feature that
 hands ready-made objects to tests (like `tmp_path`, a fresh temporary folder).
@@ -138,6 +141,9 @@ only if it behaves well (feature 6).
 
 **Hash (commit hash / SHA)** — The unique ID of a commit, a long string of letters and
 digits. The first 7 characters (e.g. `f1c54de`) are usually enough to identify it.
+
+**Immutable / append-only** — Never changed after it's written; new information is added as
+a new entry. Version records and the audit log work this way.
 
 **Job / Step / Runner** — In GitHub Actions a **workflow** contains **jobs**; each job
 has **steps** (individual commands); each job runs on a **runner** (a fresh cloud
@@ -196,6 +202,9 @@ files outside the folder it should stay in. Our manifest rejects `..` and absolu
 
 **pre-commit hook** — A script Git runs automatically just before making a commit. Ours
 formats the code and refuses commits made directly on `main`.
+
+**Proposed scope** — In `docs/features.md`: a starting interpretation of a feature's details,
+not yet confirmed by the owner. Confirm before treating it as decided.
 
 **pull request (PR)** — A request on GitHub to merge one branch into another. It shows
 the exact changes, runs CI, and lets people comment before merging.

@@ -13,6 +13,8 @@ Language: **Python 3.11+**. License: **Apache-2.0**.
 
 **Read [`docs/project-context.md`](docs/project-context.md) before starting any work.** It has
 the 13 features, the 7-stage roadmap (ADR 0009), current status and open questions.
+Before working on a feature, read its section in [`docs/features.md`](docs/features.md); its
+"proposed scope" parts must be confirmed with the owner, not treated as decided.
 
 ## Hard rules (never break these)
 

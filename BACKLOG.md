@@ -70,7 +70,7 @@ Feature 3 — automatic rule checks:
 
 ## Ongoing
 
-- [F11-1] **Decide** the first agent platform to support (open question 2), then add platforms over time
+- [F11-1] **Decide** what "platform" means (pipeline, agent, or both) and which comes first (open question 2), then add platforms over time
 
 ## Done
 
