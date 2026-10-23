@@ -11,5 +11,6 @@ old one's status to `Superseded by NNNN`.
 | 0003 | [Apache License 2.0](0003-license-apache-2.md) | Accepted | 2026-10-23 |
 | 0004 | [Protected `main`, PR-only workflow, single required check](0004-protected-main-and-ci.md) | Accepted | 2026-10-23 |
 | 0005 | [Deterministic sample agents as test fixtures](0005-deterministic-sample-agents.md) | Accepted | 2026-10-23 |
+| 0006 | [Merge commits; one branch per feature as work starts](0006-merge-commits-and-branch-per-feature.md) | Accepted | 2026-10-23 |
 
 New ADR: copy [`0000-template.md`](0000-template.md).

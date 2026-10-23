@@ -26,6 +26,7 @@ checked by CI, then merged. It doubles as the test that `main`'s protection work
 | `CLAUDE.md` | changed | New hard rule: every push adds a journal entry |
 | `.github/pull_request_template.md` | changed | Checklist box for the journal entry |
 | `README.md` | changed | `learning/` added to the repository map |
+| `docs/decisions/0006-...` | added | Decision: merge commits, one branch per feature as work starts |
 | `BACKLOG.md` | changed | S0-7 for this work; inbox item for Windows-friendly dev commands |
 
 No code changed, so the tests are unaffected — but CI still runs, because protection
@@ -50,7 +51,10 @@ git push -u origin docs/learning-notes     # push the BRANCH, not main
 
 GitHub then shows a yellow banner **"docs/learning-notes had recent pushes — Compare &
 pull request"**. Click it, check the description, and click **Create pull request**.
-Once `ci-pass` is green, click **Merge pull request**, then **Delete branch**.
+Once `ci-pass` is green, click the green button's ▾ arrow, choose **Create a merge
+commit** (our chosen style, ADR 0006 — explained in
+[topic 01](../topics/01-git-and-github.md#the-three-merge-buttons-explained)), click
+**Merge pull request**, then **Delete branch**.
 
 Locally, catch up afterwards:
 

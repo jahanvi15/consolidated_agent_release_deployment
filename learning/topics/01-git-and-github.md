@@ -97,14 +97,33 @@ a year later without opening it.
 
 `main` must always work, so nobody (not even Claude) changes it directly.
 
-1. **Branch:** `git switch -c feat/manifest-schema` — names follow `<type>/<short-topic>`.
+1. **Branch:** `git switch -c feat/s1-1-manifest-schema` — names follow
+   `<type>/<backlog-id>-<short-topic>`. One branch per backlog item, created when work
+   on it starts, from the latest `main` (ADR 0006).
 2. **Change and commit** on that branch, as many commits as needed.
-3. **Push the branch:** `git push -u origin feat/manifest-schema`
+3. **Push the branch:** `git push -u origin feat/s1-1-manifest-schema`
    (`-u` remembers the link, so later just `git push`).
 4. **Open a pull request** on GitHub. It shows the changes and runs CI automatically.
 5. **Wait for `ci-pass` to go green.** If red, fix on the same branch and push again —
    the PR updates itself.
-6. **Merge** on GitHub, then delete the branch (GitHub offers a button).
+6. **Merge** on GitHub with **Create a merge commit** (ADR 0006), then click
+   **Delete branch**.
+
+### The three merge buttons, explained
+
+GitHub's green button has a ▾ arrow offering three styles:
+
+| Style | What lands on `main` | Our choice? |
+|-------|----------------------|-------------|
+| **Create a merge commit** | All the branch's commits, unchanged, plus one "Merge pull request #N" commit joining the two lines of history | ✅ Yes |
+| **Squash and merge** | One brand-new commit containing all the changes; the branch's commits are not kept | No |
+| **Rebase and merge** | Copies of each branch commit, with new IDs, placed on top of `main` | No |
+
+Because merge commits keep commit IDs unchanged, a branch started on top of an
+unmerged PR's branch needs no extra work once that PR merges.
+
+Tidy view of `main` (one line per merged PR): `git log --oneline --first-parent main`.
+Full view (every commit, drawn as a graph): `git log --oneline --graph --all`.
 7. **Update your copy:** `git switch main` then `git pull`.
 
 ## Remotes

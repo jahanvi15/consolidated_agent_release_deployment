@@ -126,6 +126,12 @@ settings. We run the checks on Python 3.11, 3.12, 3.13 and 3.14.
 **Merge** — Combining the changes from one branch into another, e.g. a feature branch
 into `main`.
 
+**Merge commit** — A special commit with two parents that joins a branch's history into
+another branch. Our chosen way to merge pull requests (ADR 0006).
+
+**Rebase** — Re-creating commits on top of a different starting point, giving them new
+IDs. Useful but rewrites history; never rebase commits others already have.
+
 **mypy** — A **type checker** for Python. It reads type hints and reports places where
 the wrong kind of value could be used. We run it in `strict` mode.
 
