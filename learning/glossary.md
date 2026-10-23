@@ -60,6 +60,10 @@ you never type a password into the terminal.
 needed to run the product (we have none); **dev** dependencies are only needed to build
 and test it (pytest, ruff, mypy…).
 
+**Dataclass (frozen)** — A Python class defined mostly by its named fields
+(`@dataclass`). *Frozen* means its values can't be changed after creation.
+`AgentManifest` is one.
+
 **Dependabot** — A GitHub service that opens pull requests to update our dependencies
 and GitHub Actions to newer versions. Configured in `.github/dependabot.yml`.
 
@@ -68,6 +72,9 @@ input. Our sample agents are deterministic so tests never randomly fail.
 
 **Editable install** — `pip install -e .` installs a project so that Python uses the
 files in your folder directly; edits take effect without reinstalling.
+
+**Entrypoint** — The function a program starts from. In `agent.toml`,
+`entrypoint = "agent.py:run"` means "call the `run` function in `agent.py`".
 
 **Fixture (test fixture)** — Anything a test needs that's prepared in advance. Our
 sample agents are fixtures. In pytest, a "fixture" is also a specific feature that
@@ -112,6 +119,9 @@ machine that is deleted afterwards).
 **Linter** — A tool that reads code without running it and flags likely bugs, unsafe
 patterns and style problems. We use `ruff check`.
 
+**Manifest schema version** — The `schema_version` number in a manifest. It changes
+only when the format changes incompatibly, so old files are recognized, not misread.
+
 **main** — The name of the official branch. Everything on `main` should always work.
 
 **Makefile / make** — A file of named shortcuts (`make check`, `make install`) run by the
@@ -129,6 +139,9 @@ into `main`.
 **Merge commit** — A special commit with two parents that joins a branch's history into
 another branch. Our chosen way to merge pull requests (ADR 0006).
 
+**Regular expression (regex)** — A compact pattern for matching text, e.g.
+`[a-z][a-z0-9_-]{0,63}`. Python's `re` module runs them. See topic 08.
+
 **Rebase** — Re-creating commits on top of a different starting point, giving them new
 IDs. Useful but rewrites history; never rebase commits others already have.
 
@@ -141,6 +154,12 @@ published in the history.
 
 **Origin / Remote** — A **remote** is a saved address of another copy of the repository;
 `origin` is the conventional name for the main copy on GitHub.
+
+**Parse, don't validate** — Design rule: convert untrusted input into a trusted, typed
+object once, at the edge of the program, so the rest of the code never re-checks it.
+
+**Path traversal** — An attack where input like `../../secret` makes a program reach
+files outside the folder it should stay in. Our manifest rejects `..` and absolute paths.
 
 **PAT (Personal Access Token)** — A password-like string that lets a program act on
 GitHub as you, limited to specific repositories and permissions. Treat it like a
@@ -168,6 +187,9 @@ function named `test_*`, and reports which passed or failed.
 **ruff** — A fast Python tool that is both our **linter** (`ruff check`) and our
 **formatter** (`ruff format`).
 
+**Schema** — The rules for what valid data looks like: fields, types, allowed values.
+`docs/agent-manifest.md` describes ours.
+
 **Secret** — Anything that grants access: passwords, API keys, tokens, private keys.
 Secrets must never be written into code or committed.
 
@@ -187,6 +209,9 @@ and our `agent.toml` manifests.
 **Type hint** — A note in Python code saying what kind of value something is, e.g.
 `def steps(self) -> int:` says this returns an integer. Python doesn't enforce them;
 mypy checks them.
+
+**Validation** — Checking input against a schema before using it. Ours is strict:
+unknown fields are errors and every problem is reported at once.
 
 **Version (semantic versioning)** — A number like `0.0.1` meaning MAJOR.MINOR.PATCH.
 `0.x` means "early development, anything may change".

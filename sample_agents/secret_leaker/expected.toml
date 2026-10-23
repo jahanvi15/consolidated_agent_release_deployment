@@ -1,0 +1,3 @@
+# What the compliance checks should conclude about this agent (test fixture only).
+verdict = "fail"
+reason = "secret_in_output"

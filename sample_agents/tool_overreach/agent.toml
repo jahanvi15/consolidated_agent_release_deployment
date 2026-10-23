@@ -1,6 +1,6 @@
+# Agent manifest — format: docs/agent-manifest.md
+schema_version = 1
 name = "tool_overreach"
-purpose = "Exercises the undeclared-tool check (S1-2). Declares only 'search' but also sends an email."
+description = "Exercises the undeclared-tool check (S1-2). Declares only 'search' but also sends an email."
 declared_tools = ["search"]
 max_steps = 3
-expected = "fail"
-expected_reason = "undeclared_tool"

@@ -3,8 +3,10 @@
 This is test-fixture code, not the product. It gives every sample agent the same
 shape so checks can be developed against them:
 
-* ``agent.toml`` — the manifest (draft format; S1-1 turns it into the real schema)
-* ``agent.py``   — defines ``run(task: str, tools: ToolBox) -> str``
+* ``agent.toml``    — the real product manifest, validated by
+  ``consolidated_agent_release_deployment.manifest`` (see docs/agent-manifest.md)
+* ``agent.py``      — defines ``run(task: str, tools: ToolBox) -> str``
+* ``expected.toml`` — fixture only: what the compliance checks should conclude
 
 Agents never call tools directly; they go through ``ToolBox``, which records every
 call so tests can see exactly what the agent tried to do.
@@ -18,6 +20,8 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal, Protocol
+
+from consolidated_agent_release_deployment.manifest import AgentManifest, load_manifest
 
 AGENTS_DIR = Path(__file__).resolve().parent
 
@@ -59,18 +63,17 @@ class ToolBox:
 
 
 @dataclass(frozen=True)
-class Manifest:
-    name: str
-    purpose: str
-    declared_tools: tuple[str, ...]
-    max_steps: int
-    expected_verdict: Verdict
-    expected_reason: str | None
+class Expectation:
+    """What a sample agent's compliance result should be (from expected.toml)."""
+
+    verdict: Verdict
+    reason: str | None
 
 
 @dataclass(frozen=True)
 class AgentRunResult:
-    manifest: Manifest
+    manifest: AgentManifest
+    expectation: Expectation
     output: str
     calls: tuple[ToolCall, ...]
 
@@ -79,8 +82,8 @@ class AgentRunResult:
         return len(self.calls)
 
 
-class ManifestError(ValueError):
-    """Raised when an agent.toml is missing fields or has wrong types."""
+class ExpectationError(ValueError):
+    """Raised when an expected.toml fixture file is malformed."""
 
 
 # ---------- fake tools (no network, fixed answers) ----------
@@ -108,73 +111,33 @@ def default_tools() -> dict[str, Tool]:
 # ---------- loading ----------
 
 
-def _get(data: Mapping[str, object], key: str, source: Path) -> object:
-    if key not in data:
-        raise ManifestError(f"{source}: missing required field {key!r}")
-    return data[key]
-
-
-def _str(data: Mapping[str, object], key: str, source: Path) -> str:
-    value = _get(data, key, source)
-    if not isinstance(value, str):
-        raise ManifestError(f"{source}: field {key!r} must be a string")
-    return value
-
-
-def _int(data: Mapping[str, object], key: str, source: Path) -> int:
-    value = _get(data, key, source)
-    if isinstance(value, bool) or not isinstance(value, int):
-        raise ManifestError(f"{source}: field {key!r} must be an integer")
-    return value
-
-
-def _str_list(data: Mapping[str, object], key: str, source: Path) -> tuple[str, ...]:
-    value = _get(data, key, source)
-    if not isinstance(value, list) or not all(isinstance(v, str) for v in value):
-        raise ManifestError(f"{source}: field {key!r} must be a list of strings")
-    return tuple(value)
-
-
-def load_manifest(path: Path) -> Manifest:
+def load_expectation(path: Path) -> Expectation:
     with path.open("rb") as f:
         data = tomllib.load(f)
-
-    name = _str(data, "name", path)
-    purpose = _str(data, "purpose", path)
-    tools = _str_list(data, "declared_tools", path)
-    max_steps = _int(data, "max_steps", path)
-    expected = _str(data, "expected", path)
-    reason = data.get("expected_reason")
-
-    if max_steps < 1:
-        raise ManifestError(f"{path}: 'max_steps' must be at least 1")
-    if expected not in ("pass", "fail"):
-        raise ManifestError(f"{path}: 'expected' must be 'pass' or 'fail'")
-    if expected == "fail" and not isinstance(reason, str):
-        raise ManifestError(f"{path}: 'expected_reason' is required when expected = 'fail'")
-    if expected == "pass" and reason is not None:
-        raise ManifestError(f"{path}: 'expected_reason' only applies when expected = 'fail'")
-
-    return Manifest(
-        name=name,
-        purpose=purpose,
-        declared_tools=tools,
-        max_steps=max_steps,
-        expected_verdict="pass" if expected == "pass" else "fail",
-        expected_reason=reason if isinstance(reason, str) else None,
-    )
+    unknown = set(data) - {"verdict", "reason"}
+    if unknown:
+        raise ExpectationError(f"{path}: unknown field(s) {sorted(unknown)}")
+    verdict = data.get("verdict")
+    reason = data.get("reason")
+    if verdict not in ("pass", "fail"):
+        raise ExpectationError(f"{path}: 'verdict' must be 'pass' or 'fail'")
+    if verdict == "fail" and not isinstance(reason, str):
+        raise ExpectationError(f"{path}: 'reason' is required when verdict = 'fail'")
+    if verdict == "pass" and reason is not None:
+        raise ExpectationError(f"{path}: 'reason' only applies when verdict = 'fail'")
+    return Expectation(verdict="pass" if verdict == "pass" else "fail", reason=reason)
 
 
-def load_run_function(agent_dir: Path) -> AgentRun:
-    path = agent_dir / "agent.py"
+def load_run_function(agent_dir: Path, manifest: AgentManifest) -> AgentRun:
+    path = agent_dir / manifest.entrypoint_file
     spec = importlib.util.spec_from_file_location(f"sample_agent_{agent_dir.name}", path)
     if spec is None or spec.loader is None:
         raise ImportError(f"cannot load {path}")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    run = getattr(module, "run", None)
+    run = getattr(module, manifest.entrypoint_function, None)
     if not callable(run):
-        raise ImportError(f"{path} does not define run(task, tools)")
+        raise ImportError(f"{path} does not define {manifest.entrypoint_function}(task, tools)")
     result: AgentRun = run
     return result
 
@@ -186,7 +149,10 @@ def discover(root: Path = AGENTS_DIR) -> list[Path]:
 
 def run_agent(agent_dir: Path, task: str = "summarize the quarterly report") -> AgentRunResult:
     manifest = load_manifest(agent_dir / "agent.toml")
-    run = load_run_function(agent_dir)
+    expectation = load_expectation(agent_dir / "expected.toml")
+    run = load_run_function(agent_dir, manifest)
     box = ToolBox(tools=default_tools())
     output = run(task, box)
-    return AgentRunResult(manifest=manifest, output=output, calls=tuple(box.calls))
+    return AgentRunResult(
+        manifest=manifest, expectation=expectation, output=output, calls=tuple(box.calls)
+    )
