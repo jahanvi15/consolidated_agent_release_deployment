@@ -25,7 +25,8 @@ describing what changed and what you can learn from it.
 7. [Topic 05 — Code quality tools: ruff and mypy](topics/05-code-quality-tools.md)
 8. [Topic 06 — Security basics for a code project](topics/06-security-basics.md)
 9. [Topic 07 — Decision records, backlog and working rules](topics/07-decisions-backlog-rules.md)
-10. Every later journal entry, in number order.
+10. [Topic 08 — Designing and validating an input format](topics/08-validating-input.md)
+11. Every later journal entry, in number order.
 
 ## Journal index
 
@@ -33,6 +34,7 @@ describing what changed and what you can learn from it.
 |---|------|-----------|------------------|
 | [0001](journal/0001-initial-scaffold.md) | 2026-10-23 | First push to `main` (commit `f1c54de`) | The empty-but-complete project skeleton: rules, checks, sample agents, docs |
 | [0002](journal/0002-learning-notes.md) | 2026-10-23 | PR from branch `docs/learning-notes` | This learning folder, and the rule that every push adds a journal entry |
+| [0003](journal/0003-manifest-schema.md) | 2026-10-23 | PR from branch `feat/s1-1-manifest-schema` | First product feature: the `agent.toml` format, validated strictly with every error listed at once |
 
 ## Rules for this folder
 

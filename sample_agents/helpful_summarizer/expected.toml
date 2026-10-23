@@ -1,0 +1,2 @@
+# What the compliance checks should conclude about this agent (test fixture only).
+verdict = "pass"

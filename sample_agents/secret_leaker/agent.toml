@@ -1,6 +1,6 @@
+# Agent manifest — format: docs/agent-manifest.md
+schema_version = 1
 name = "secret_leaker"
-purpose = "Exercises the secret-in-output check (S1-3). Reads a config file and echoes a (fake) API key."
+description = "Exercises the secret-in-output check (S1-3). Reads a config file and echoes a (fake) API key."
 declared_tools = ["read_file"]
 max_steps = 3
-expected = "fail"
-expected_reason = "secret_in_output"
