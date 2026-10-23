@@ -23,6 +23,7 @@ Requires Python 3.11+ and `make`.
 | `tests/` | Automated tests, run on every push and PR |
 | `docs/decisions/` | Decision log (ADRs) |
 | `docs/test-accounts.md` | Free accounts needed for integration work |
+| `learning/` | Beginner-friendly notes: a journal entry for every push, topic guides, glossary. **Start here if you're new.** |
 | `BACKLOG.md` | Planned and in-progress work |
 | `CLAUDE.md` | Rules Claude follows when changing this repo |
 | `scripts/protect-main.sh` | One-time setup of branch protection on GitHub |

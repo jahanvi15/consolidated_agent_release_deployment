@@ -29,6 +29,16 @@ License: **Apache-2.0**. See `docs/decisions/` for why.
    with a one-line reason in the PR.
 6. **Don't change these files without the human asking:** `LICENSE`, `NOTICE`,
    `.github/workflows/*`, `scripts/protect-main.sh`, existing accepted ADRs.
+7. **Every push or pull request adds a learning journal entry.** The project owner is
+   learning as the project grows, so each change must explain itself for a beginner:
+   - Add `learning/journal/NNNN-short-title.md` (next number), following
+     `learning/journal/_template.md`: what changed and why, new concepts, exact commands
+     (with Windows Git Bash notes where they differ), what went wrong, how to verify.
+   - Add a row to the journal index in `learning/README.md`.
+   - Add every new technical term to `learning/glossary.md`.
+   - If the change teaches something new about a subject, update or add a guide in
+     `learning/topics/`.
+   - Assume no prior knowledge. Never include real secrets, even as examples.
 
 ## How to work
 

@@ -5,7 +5,7 @@ Format: `- [ID] Title — one-line outcome (stage)`
 
 ## In progress
 
-_(nothing yet)_
+- [S0-7] Learning notes folder and journal-per-push rule — `learning/` exists; rule in `CLAUDE.md` (PR from `docs/learning-notes`)
 
 ## Next up (Stage 0 — finish setup)
 
@@ -27,6 +27,8 @@ _(nothing yet)_
 
 ## Inbox (unsorted ideas)
 
+- Pin exact dev tool versions (ruff, mypy) so new releases can't change results unexpectedly (needs an ADR)
+- Windows-friendly dev commands (Makefile assumes `make` and `.venv/bin/`; Windows has neither)
 - Azure DevOps pipeline task (second platform)
 - SARIF output so findings show in GitHub code scanning
 - Release automation and PyPI publishing (needs an ADR)
