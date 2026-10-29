@@ -50,8 +50,10 @@ Details that follow from those answers:
   zero). Reason: the record is nested, long-lived and read back by other features;
   pydantic gives strict typed validation, JSON in and out, and a JSON Schema for free.
   The manifest stays hand-written (ADR 0007).
-- The GitHub workflow that calls the Action after a merge is **not** added here: it
-  needs `contents: write`, and workflow files change only when the owner asks (CLAUDE.md).
+- Workflow `.github/workflows/record-versions.yml` (added at the owner's request)
+  previews on pull requests into `main` with read-only access, and saves after each
+  merge to `main`. Only that job gets `contents: write`, and saves run one at a time.
+  The `protect-main` ruleset covers only `main`, so pushing `agent-releases` is allowed.
 
 ## Consequences
 

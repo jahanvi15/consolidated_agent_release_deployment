@@ -172,7 +172,22 @@ Plus the secret rule: records store the *names* of environment variables
 (`SEARCH_API_KEY`), never values, and a scan blocks any record that looks like it holds
 a key. It reports *where*, never the secret itself.
 
-## 9. Making code testable: pass the world in
+## 9. The workflow: least privilege
+
+`.github/workflows/record-versions.yml` runs the tool automatically. Three settings
+matter:
+
+- **`permissions:`** Each run gets a temporary key called `GITHUB_TOKEN`. The file starts
+  with `contents: read` for everything, and only the `record` job (after a merge) gets
+  `contents: write`. A job that only previews can't change anything. Giving each part
+  only the access it needs is called **least privilege**.
+- **`concurrency:`** Two merges close together would start two saves. A concurrency
+  group makes the second one wait, and `cancel-in-progress: false` means a save is
+  never stopped halfway.
+- **No loops:** pushes made with `GITHUB_TOKEN` don't start new workflow runs, so saving
+  records can't trigger another save.
+
+## 10. Making code testable: pass the world in
 
 Functions take the current time (`now=`) and the environment (`env=`) as arguments
 instead of reading them directly. Tests pass fixed values, so results are the same on
@@ -183,9 +198,10 @@ every run, and a fake "GitHub Actions" environment needs no real GitHub.
 1. Run `record preview` on `sample_agents/helpful_summarizer` twice. Is the fingerprint
    the same both times? Why?
 2. Add a space to `prompts/system.md` and preview again. Which file hashes changed?
-3. Open `.github/actions/record-version/action.yml`. Find the two places that stop
+3. In `record-versions.yml`, which job can write to the repository, and why only that one?
+4. Open `.github/actions/record-version/action.yml`. Find the two places that stop
    script injection.
-4. In `tests/test_store.py`, find the test proving your current branch and files are
+5. In `tests/test_store.py`, find the test proving your current branch and files are
    untouched after saving a record.
 
 ## Further reading

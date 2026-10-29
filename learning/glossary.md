@@ -69,6 +69,10 @@ overwrite each other's records.
 **Composite action** — A reusable GitHub Action written as a list of steps in an
 `action.yml` file. Ours is `.github/actions/record-version/`.
 
+**Concurrency group (GitHub Actions)** — A name that makes runs wait for each other
+instead of running at the same time. The record workflow uses one so two saves never
+overlap.
+
 **Coverage (test coverage)** — The percentage of code lines that were actually run by
 the tests. We require at least 90 %. High coverage doesn't prove code is correct, but
 low coverage proves parts of it are untested.
@@ -145,12 +149,18 @@ both to work on a repo.
 `.github/workflows/` and runs their jobs on cloud machines when events happen (a push,
 a pull request…).
 
+**GITHUB_TOKEN** — A temporary key GitHub gives each workflow run, valid only for that
+run and that repository. The `permissions:` setting decides what it may do.
+
 **Hash (commit hash / SHA)** — The unique ID of a commit, a long string of letters and
 digits. The first 7 characters (e.g. `f1c54de`) are usually enough to identify it.
 
 **Job / Step / Runner** — In GitHub Actions a **workflow** contains **jobs**; each job
 has **steps** (individual commands); each job runs on a **runner** (a fresh cloud
 machine that is deleted afterwards).
+
+**Least privilege** — Give each part of a system only the access it needs. In the record
+workflow only the job that saves records may write.
 
 **Linter** — A tool that reads code without running it and flags likely bugs, unsafe
 patterns and style problems. We use `ruff check`.

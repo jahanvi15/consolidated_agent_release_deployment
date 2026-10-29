@@ -29,11 +29,12 @@ and they can never be edited. "What changed" (Feature 2) and the rule checks
 | `src/.../gitutil.py` | added | Runs `git` safely |
 | `src/.../cli.py` | changed | New commands: `record preview / create / list / show` |
 | `.github/actions/record-version/action.yml` | added | Reusable Action: preview on PRs, create + push otherwise |
+| `.github/workflows/record-versions.yml` | added (you asked) | Runs the Action: preview on every PR into `main`, save after every merge |
 | `pyproject.toml` | changed | First runtime dependency, pydantic; mypy's pydantic plugin |
 | `sample_agents/*` | changed | New manifest format; test expectations moved to `expected.toml`; `helpful_summarizer` shows every field and has a prompt file |
 | `tests/` | added/changed | 188 tests (was 35). Coverage 99.9 % |
 | `docs/decisions/0007…`, `0008…` | added (Proposed) | Manifest format; version record. For you to accept |
-| `learning/` | added/changed | This entry, topic 09, field table in topic 08, 26 glossary terms |
+| `learning/` | added/changed | This entry, topic 09, field table in topic 08, 29 glossary terms |
 
 ## New concepts
 
@@ -119,9 +120,13 @@ below).
    inputs too, not only bad ones.
 3. **A test assumed the wrong value** (`max_steps` of a sample agent is 5, not 2). The
    test failed, which is exactly its job; the test was fixed, not the code.
-4. **The GitHub workflow is not included.** Saving records after each merge needs a
-   workflow file with permission to push (`contents: write`). Project rules say workflow
-   files change only when you ask, so it's a separate decision.
+4. **The workflow was added in a second push.** Saving records needs permission to push
+   (`contents: write`), and project rules say workflow files change only when you ask, so
+   it waited for your answer. Before pushing it was checked with `actionlint` (a
+   workflow checker) and rehearsed against a pretend GitHub: first merge, a merge with
+   no agent changes, and a merge changing one agent. The first rehearsal "failed"
+   because the pretend copy was set up wrongly, not the tool, a reminder to check
+   your test setup before blaming the code.
 5. **PR size:** about three times the ~400-line guideline, because the manifest code
    came along and Feature 1 has several parts. Most of the extra lines are tests.
 
@@ -131,7 +136,11 @@ below).
 2. Run `record create --store-dir …` twice; the second run must say "unchanged".
 3. Edit `sample_agents/helpful_summarizer/prompts/system.md`, commit it on a scratch
    branch, run `create` again: only that agent gets version 2.
-4. Open a saved `000001.json`, change `"max_steps"`, run `record show`: it must fail
+4. After this PR is merged, open the repo's **Actions** tab: the "Record agent
+   versions" run should list `created version 1` for each sample agent, and a new
+   `agent-releases` branch appears under **Branches**. On this PR itself, the
+   `preview` job shows the records without saving them.
+5. Open a saved `000001.json`, change `"max_steps"`, run `record show`: it must fail
    with "fingerprint does not match content".
 
 ## Further reading
