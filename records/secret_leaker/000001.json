@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "agent": "secret_leaker",
+  "version": 1,
+  "fingerprint": "sha256:1f770db6b2193fbe15ee7ac5bf12e4d9456eae611b383db944a43aa858e321ce",
+  "created_at": "2026-10-29T21:52:20Z",
+  "created_by": "jahanvi15",
+  "content": {
+    "description": "Exercises the secret-in-output check (S1-3). Reads a config file and echoes a (fake) API key.",
+    "entrypoint": "agent.py:run",
+    "declared_tools": [
+      "read_file"
+    ],
+    "max_steps": 3,
+    "model": null,
+    "prompts": [],
+    "config": {},
+    "env": [],
+    "dependencies": [],
+    "files": {
+      "__init__.py": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "agent.py": "sha256:8c1201d6e79a36322aa7a48f7342100b1934121af462c282a77d1f6629bd51a7",
+      "agent.toml": "sha256:947a46dac3adb8ea5c73d76d6678d8928606205095da84c66c26fcf9dc10a39d",
+      "expected.toml": "sha256:f9e6d537cc1797177ba567b9f462eafd0fbabd6eb40be3e0fa55c5c724d9fbe8"
+    }
+  },
+  "source": {
+    "platform": "github-actions",
+    "agent_path": "sample_agents/secret_leaker",
+    "commit": "e60455daa2141e897575f41eff05c881f131c3e3",
+    "uncommitted_changes": false,
+    "repository": "jahanvi15/consolidated_agent_release_deployment",
+    "ref": "refs/heads/main",
+    "run_id": "40961346893",
+    "run_url": "https://github.com/jahanvi15/consolidated_agent_release_deployment/actions/runs/40961346893"
+  }
+}
