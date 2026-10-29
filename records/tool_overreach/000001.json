@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "agent": "tool_overreach",
+  "version": 1,
+  "fingerprint": "sha256:88624b6366043bf287c6f8317d7b03c7b0140eb7bae318128d9221e24a594c66",
+  "created_at": "2026-10-29T21:52:20Z",
+  "created_by": "jahanvi15",
+  "content": {
+    "description": "Exercises the undeclared-tool check (S1-2). Declares only 'search' but also sends an email.",
+    "entrypoint": "agent.py:run",
+    "declared_tools": [
+      "search"
+    ],
+    "max_steps": 3,
+    "model": null,
+    "prompts": [],
+    "config": {},
+    "env": [],
+    "dependencies": [],
+    "files": {
+      "__init__.py": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "agent.py": "sha256:45beda21d140bc5254a940d914090e0a6d0c3aaebe11089df168fe2d6935991a",
+      "agent.toml": "sha256:7fc9536d462aa082bace4b3ead524eb837a02575d656026443b0b42650c99c22",
+      "expected.toml": "sha256:c68905c083869f93bfc847b7d79fc7d4b89fa0b1dd9cf0172088a6e96a14ec6b"
+    }
+  },
+  "source": {
+    "platform": "github-actions",
+    "agent_path": "sample_agents/tool_overreach",
+    "commit": "e60455daa2141e897575f41eff05c881f131c3e3",
+    "uncommitted_changes": false,
+    "repository": "jahanvi15/consolidated_agent_release_deployment",
+    "ref": "refs/heads/main",
+    "run_id": "40961346893",
+    "run_url": "https://github.com/jahanvi15/consolidated_agent_release_deployment/actions/runs/40961346893"
+  }
+}
