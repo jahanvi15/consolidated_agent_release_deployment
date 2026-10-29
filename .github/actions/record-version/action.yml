@@ -1,0 +1,68 @@
+# Reusable GitHub Action: record a new version of every agent that changed.
+#
+# On a pull request it only previews (prints the record, saves nothing).
+# On any other event it saves new records on the records branch and pushes it.
+#
+# The calling workflow needs:
+#   permissions:
+#     contents: write          # to push the records branch
+#   steps:
+#     - uses: actions/checkout@v7
+#     - uses: jahanvi15/consolidated_agent_release_deployment/.github/actions/record-version@main
+#
+# All the real work is done by the command-line tool; this file only installs it and
+# calls it, so other pipeline platforms can reuse the same tool.
+name: Record agent versions
+description: Save a version record for every AI agent whose content changed.
+
+inputs:
+  paths:
+    description: Agent folder(s), or a folder above them, separated by spaces.
+    default: "."
+  branch:
+    description: Git branch that holds the records.
+    default: agent-releases
+  python-version:
+    description: Python version used to run the tool.
+    default: "3.13"
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v7
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install the tool
+      shell: bash
+      env:
+        TOOL_DIR: ${{ github.action_path }}/../../..
+      run: python -m pip install --quiet "$TOOL_DIR"
+
+    # Inputs are passed through environment variables, never pasted into the script,
+    # so a crafted value can't run its own commands ("script injection").
+    - name: Preview (pull request)
+      if: github.event_name == 'pull_request'
+      shell: bash
+      env:
+        PATHS: ${{ inputs.paths }}
+        BRANCH: ${{ inputs.branch }}
+      run: |
+        git fetch --quiet origin "$BRANCH:refs/heads/$BRANCH" 2>/dev/null || true
+        # shellcheck disable=SC2086  # PATHS is a space-separated list on purpose
+        consolidated-agent-release-deployment record preview --branch "$BRANCH" $PATHS
+
+    - name: Create and push records
+      if: github.event_name != 'pull_request'
+      shell: bash
+      env:
+        PATHS: ${{ inputs.paths }}
+        BRANCH: ${{ inputs.branch }}
+      run: |
+        git fetch --quiet origin "$BRANCH:refs/heads/$BRANCH" 2>/dev/null || true
+        # shellcheck disable=SC2086  # PATHS is a space-separated list on purpose
+        consolidated-agent-release-deployment record create --branch "$BRANCH" $PATHS
+        # Push only if the branch exists (it doesn't until the first record is made).
+        if git rev-parse --verify --quiet "refs/heads/$BRANCH" >/dev/null; then
+          git push --quiet origin "refs/heads/$BRANCH:refs/heads/$BRANCH"
+        fi

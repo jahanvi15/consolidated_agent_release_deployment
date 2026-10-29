@@ -1,0 +1,47 @@
+# Feature 1: save a version record for every agent that changed (ADR 0008).
+#
+# - Pull request into main: preview only. Prints the records it *would* save.
+# - Merge (push) to main: saves new records on the `agent-releases` branch and pushes it.
+#
+# Records never go to main, and pushes made with GITHUB_TOKEN don't start new
+# workflow runs, so this can't loop.
+name: Record agent versions
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Nothing may write by default; only the "record" job below gets write access.
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/record-version
+        with:
+          paths: sample_agents
+
+  record:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # needed to push the agent-releases branch
+    # One save at a time. Never cancel a save halfway; the next run waits instead.
+    concurrency:
+      group: record-versions
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7 # keeps credentials so the action can push
+      - uses: ./.github/actions/record-version
+        with:
+          paths: sample_agents
