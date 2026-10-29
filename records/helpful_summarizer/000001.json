@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "agent": "helpful_summarizer",
+  "version": 1,
+  "fingerprint": "sha256:045024061986219493f9e3812a43b9c6f5f862f752656657f2e03409e1ad6260",
+  "created_at": "2026-10-29T21:52:20Z",
+  "created_by": "jahanvi15",
+  "content": {
+    "description": "Baseline. Uses only its declared tool, stays in budget, leaks nothing. Every check should pass.",
+    "entrypoint": "agent.py:run",
+    "declared_tools": [
+      "search"
+    ],
+    "max_steps": 3,
+    "model": {
+      "provider": "fake",
+      "name": "deterministic-v1",
+      "settings": {
+        "temperature": 0.0,
+        "max_output_tokens": 400
+      }
+    },
+    "prompts": [
+      "prompts/system.md"
+    ],
+    "config": {
+      "summary_style": "bullet points",
+      "max_results": 3
+    },
+    "env": [
+      "SEARCH_API_KEY"
+    ],
+    "dependencies": [],
+    "files": {
+      "__init__.py": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "agent.py": "sha256:15869d60afa37e445baaccda8739c86ecc65c9c62a805cf7d37995bb1451a3d2",
+      "agent.toml": "sha256:ffd0064dd41b8b766348296bfaa67082297e928b2d477c2b3a400a39bcaca679",
+      "expected.toml": "sha256:dc3f1c8fa32357efc0f4bb43ab80e7745e0c5079e31390a89758e57cf1d872d8",
+      "prompts/system.md": "sha256:a88c3bcc58fb5ffbdbeac262108ff019a6b1c597c1d252e87b9a247699e4409d"
+    }
+  },
+  "source": {
+    "platform": "github-actions",
+    "agent_path": "sample_agents/helpful_summarizer",
+    "commit": "e60455daa2141e897575f41eff05c881f131c3e3",
+    "uncommitted_changes": false,
+    "repository": "jahanvi15/consolidated_agent_release_deployment",
+    "ref": "refs/heads/main",
+    "run_id": "40961346893",
+    "run_url": "https://github.com/jahanvi15/consolidated_agent_release_deployment/actions/runs/40961346893"
+  }
+}
