@@ -30,6 +30,16 @@ Version records are append-only, so a fix is always a new version.
 **assert** — A Python statement that says "this must be true". In tests, a failed
 `assert` makes the test fail. Example: `assert 1 + 1 == 2`.
 
+**Atomic write (all or nothing)** — Saving several things so that either all of them are
+saved or none are. The tool saves a run's records and events in one Git commit. See
+[topic 10](topics/10-audit-logs.md).
+
+**Audit event** — One entry in the audit log saying what happened: a version created, an
+agent unchanged, or a refusal with its reason. Lives in `audit/` on the records branch.
+
+**Audit log** — The permanent list of audit events, used to prove later what the tool
+did and when. Ours is append-only and hash-chained (ADR 0009).
+
 **Backlog** — The ordered to-do list for the project. Ours is `BACKLOG.md`.
 
 **Blob / tree / Git object** — How Git stores everything inside `.git`: a **blob** is
@@ -85,6 +95,12 @@ you never type a password into the terminal.
 uses two (`\r\n`, CRLF), Linux and Mac one (`\n`, LF). The tool treats them the same
 when fingerprinting.
 
+**CSV** — "Comma-separated values": a plain-text table, one row per line, that any
+spreadsheet can open. `audit export` writes one.
+
+**CSV injection** — When text in a CSV starts with `=`, `+`, `-` or `@` and a
+spreadsheet runs it as a formula. Our export puts a `'` in front to prevent it.
+
 **Dataclass (frozen)** — A Python class defined mostly by its named fields
 (`@dataclass`). *Frozen* means its values can't be changed after creation.
 `AgentManifest` is one.
@@ -108,6 +124,9 @@ files in your folder directly; edits take effect without reinstalling.
 **Environment variable** — A named value set outside a program that the program can
 read, e.g. `SEARCH_API_KEY`. Secrets are passed this way so they're never written in
 files. `agent.toml` lists only the names.
+
+**Exit code** — A number a program returns when it ends: 0 means success, anything else
+means a problem. CI marks a step red when its exit code isn't 0.
 
 **Fingerprint (SHA-256)** — A 64-character code computed from data with the SHA-256 hash
 function. Same data always gives the same code; any change gives a different one.
@@ -155,9 +174,16 @@ run and that repository. The `permissions:` setting decides what it may do.
 **Hash (commit hash / SHA)** — The unique ID of a commit, a long string of letters and
 digits. The first 7 characters (e.g. `f1c54de`) are usually enough to identify it.
 
+**Hash chain** — A list where each item stores the fingerprint of the item before it, so
+changing or removing any item breaks the links after it. Our audit events form one.
+
 **Job / Step / Runner** — In GitHub Actions a **workflow** contains **jobs**; each job
 has **steps** (individual commands); each job runs on a **runner** (a fresh cloud
 machine that is deleted afterwards).
+
+**Job summary (GitHub Actions)** — A Markdown page shown on a workflow run. A step
+writes to the file named in `$GITHUB_STEP_SUMMARY`; the tool adds a table of what it
+did.
 
 **Least privilege** — Give each part of a system only the access it needs. In the record
 workflow only the job that saves records may write.

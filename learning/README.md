@@ -27,7 +27,8 @@ describing what changed and what you can learn from it.
 9. [Topic 07 — Decision records, backlog and working rules](topics/07-decisions-backlog-rules.md)
 10. [Topic 08 — Designing and validating an input format](topics/08-validating-input.md)
 11. [Topic 09 — Version records: fingerprints, append-only storage, Git's inner parts](topics/09-version-records.md)
-12. Every later journal entry, in number order.
+12. [Topic 10 — Audit logs: hash chains, all-or-nothing saves, safe exports](topics/10-audit-logs.md)
+13. Every later journal entry, in number order.
 
 ## Journal index
 
@@ -36,6 +37,7 @@ describing what changed and what you can learn from it.
 | [0001](journal/0001-initial-scaffold.md) | 2026-10-23 | First push to `main` (commit `f1c54de`) | The empty-but-complete project skeleton: rules, checks, sample agents, docs |
 | [0002](journal/0002-learning-notes.md) | 2026-10-23 | PR from branch `docs/learning-notes` | This learning folder, and the rule that every push adds a journal entry |
 | [0003](journal/0003-version-record.md) | 2026-10-30 | PR from branch `feat/s1-1-version-record` | Feature 1: a permanent, fingerprinted record of every agent version, saved on its own branch |
+| [0004](journal/0004-audit-log.md) | 2026-10-30 | PR from branch `feat/s1-audit-log` | Basic audit log: every outcome logged in a hash chain, saved with the records; README status |
 
 ## Rules for this folder
 

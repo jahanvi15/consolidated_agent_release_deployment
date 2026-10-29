@@ -8,6 +8,15 @@
   Use it after a merge to ``main``.
 * ``record list AGENT`` / ``record show AGENT VERSION`` — read saved records.
 
+``audit`` commands (the audit log, ADR 0009):
+
+* ``audit list`` — events, optionally for one agent or a date range.
+* ``audit verify`` — check the hash chain, and that events and records match.
+* ``audit export`` — events as CSV for a spreadsheet.
+
+``record create`` logs one event per agent: created, unchanged or refused. It saves all
+new records and events together, and exits 1 if any agent was refused.
+
 ``PATH`` is an agent folder (one with ``agent.toml``) or any folder above it; every
 agent found below it is handled (several agents per repository are fine).
 
@@ -21,16 +30,25 @@ import argparse
 import os
 import sys
 from collections.abc import Mapping, Sequence
-from datetime import datetime
+from dataclasses import dataclass
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 from pydantic import ValidationError
 
 from consolidated_agent_release_deployment import __version__
+from consolidated_agent_release_deployment.audit import (
+    AuditEvent,
+    EventDraft,
+    created_event,
+    to_csv,
+    to_markdown,
+    verify,
+)
 from consolidated_agent_release_deployment.gitutil import GitError, git
 from consolidated_agent_release_deployment.manifest import ManifestError
 from consolidated_agent_release_deployment.secret_scan import Finding, scan_settings, scan_text
-from consolidated_agent_release_deployment.source import detect_source
+from consolidated_agent_release_deployment.source import detect_source, write_github_summary
 from consolidated_agent_release_deployment.store import (
     DEFAULT_BRANCH,
     DirectoryStore,
@@ -89,18 +107,102 @@ def build_record(
     record = new_record(
         manifest.name, content, version=version, created_by=who, source=source, now=now
     )
-    _block_secrets(agent_dir, record)
+    findings = secret_findings(record)
+    if findings:
+        raise CliError(_blocked_message(agent_dir, findings))
     return record, latest
 
 
-def _block_secrets(agent_dir: Path, record: VersionRecord) -> None:
-    findings: list[Finding] = scan_text(record.to_json(), f"{record.agent} record")
+def secret_findings(record: VersionRecord) -> list[Finding]:
+    findings = scan_text(record.to_json(), f"{record.agent} record")
     findings += scan_settings(record.content.config, "config")
     if record.content.model:
         findings += scan_settings(record.content.model.settings, "model.settings")
+    return findings
+
+
+def _blocked_message(agent_dir: Path, findings: Sequence[Finding]) -> str:
+    lines = "\n".join(f"  - {f}" for f in findings)
+    return f"{agent_dir}: blocked, the record would contain a secret:\n{lines}"
+
+
+@dataclass(frozen=True)
+class Outcome:
+    """What ``create`` decided for one agent: the event, and a record if one is new."""
+
+    draft: EventDraft
+    record: VersionRecord | None
+    message: str
+
+
+def evaluate(
+    agent_dir: Path,
+    store: RecordStore,
+    env: Mapping[str, str],
+    now: datetime,
+    allow_uncommitted: bool,
+) -> Outcome:
+    """Decide created / unchanged / refused for one agent. Never raises for those cases."""
+    source, who = detect_source(agent_dir, env)
+    base = {"occurred_at": now, "actor": who, "via": source.platform, "source": source}
+
+    try:
+        manifest, content = load_agent(agent_dir)
+    except ManifestError as exc:
+        details = [str(i) for i in exc.issues]
+        draft = EventDraft(type="version.refused", reason="invalid_agent", details=details, **base)
+        return Outcome(draft, None, f"{agent_dir}: refused, invalid agent\n{exc}")
+    except ContentError as exc:
+        draft = EventDraft(
+            type="version.refused", reason="invalid_agent", details=[str(exc)], **base
+        )
+        return Outcome(draft, None, f"{agent_dir}: refused, {exc}")
+
+    latest = store.latest(manifest.name)
+    version = latest.version + 1 if latest else 1
+    record = new_record(
+        manifest.name, content, version=version, created_by=who, source=source, now=now
+    )
+    agent = {"agent": record.agent, "fingerprint": record.fingerprint}
+    short = record.fingerprint[7:19]
+
+    findings = secret_findings(record)
     if findings:
-        lines = "\n".join(f"  - {f}" for f in findings)
-        raise CliError(f"{agent_dir}: blocked, the record would contain a secret:\n{lines}")
+        draft = EventDraft(
+            type="version.refused",
+            reason="possible_secret",
+            details=[str(f) for f in findings],
+            **agent,
+            **base,
+        )
+        return Outcome(draft, None, _blocked_message(agent_dir, findings))
+
+    if latest and latest.fingerprint == record.fingerprint:
+        draft = EventDraft(type="version.unchanged", version=latest.version, **agent, **base)
+        return Outcome(
+            draft, None, f"{record.agent}: unchanged, still version {latest.version} ({short})"
+        )
+
+    if source.uncommitted_changes and not allow_uncommitted:
+        draft = EventDraft(
+            type="version.refused",
+            reason="uncommitted_changes",
+            details=[f"folder differs from commit {source.commit}"],
+            **agent,
+            **base,
+        )
+        return Outcome(
+            draft,
+            None,
+            f"{agent_dir}: has uncommitted changes, so commit {source.commit} "
+            "would not match the record. Commit first (or pass --allow-uncommitted).",
+        )
+
+    return Outcome(
+        created_event(record),
+        record,
+        f"{record.agent}: created version {record.version} ({short})",
+    )
 
 
 # ---------- commands ----------
@@ -118,20 +220,25 @@ def cmd_preview(args: argparse.Namespace, env: Mapping[str, str]) -> int:
 
 def cmd_create(args: argparse.Namespace, env: Mapping[str, str]) -> int:
     store = open_store(args)
-    for agent_dir in discover_agents(args.paths):
-        record, latest = build_record(agent_dir, store, env)
-        short = record.fingerprint[7:19]
-        if latest and latest.fingerprint == record.fingerprint:
-            print(f"{record.agent}: unchanged, still version {latest.version} ({short})")
-            continue
-        if record.source.uncommitted_changes and not args.allow_uncommitted:
-            raise CliError(
-                f"{agent_dir}: has uncommitted changes, so commit {record.source.commit} "
-                "would not match the record. Commit first (or pass --allow-uncommitted)."
-            )
-        store.append(record)
-        print(f"{record.agent}: created version {record.version} ({short})")
-    return 0
+    now = datetime.now(UTC).replace(microsecond=0)
+    outcomes = [
+        evaluate(agent_dir, store, env, now, args.allow_uncommitted)
+        for agent_dir in discover_agents(args.paths)
+    ]
+    # Everything is saved together; if this fails, nothing is saved (ADR 0009).
+    events = store.save(
+        [o.record for o in outcomes if o.record is not None], [o.draft for o in outcomes]
+    )
+    refused = 0
+    for outcome in outcomes:
+        if outcome.draft.type == "version.refused":
+            refused += 1
+            print(f"error: {outcome.message}", file=sys.stderr)
+        else:
+            print(outcome.message)
+    print(f"audit: logged events {events[0].sequence}-{events[-1].sequence}")
+    write_github_summary(env, to_markdown(events))
+    return 1 if refused else 0
 
 
 def cmd_list(args: argparse.Namespace, env: Mapping[str, str]) -> int:
@@ -150,6 +257,56 @@ def cmd_list(args: argparse.Namespace, env: Mapping[str, str]) -> int:
 def cmd_show(args: argparse.Namespace, env: Mapping[str, str]) -> int:
     store = open_store(args)
     print(store.read(args.agent, args.version).to_json(), end="")
+    return 0
+
+
+def _filtered(args: argparse.Namespace, store: RecordStore) -> list[AuditEvent]:
+    events = store.events()
+    if args.agent:
+        events = [e for e in events if e.agent == args.agent]
+    if args.since:
+        events = [e for e in events if e.occurred_at.date() >= args.since]
+    if args.until:
+        events = [e for e in events if e.occurred_at.date() <= args.until]
+    return events
+
+
+def cmd_audit_list(args: argparse.Namespace, env: Mapping[str, str]) -> int:
+    events = _filtered(args, open_store(args))
+    if not events:
+        raise CliError("no audit events match")
+    for e in events:
+        what = e.type.removeprefix("version.")
+        if e.reason:
+            what += f" ({e.reason})"
+        agent = e.agent or e.source.agent_path
+        version = f"v{e.version}" if e.version else "-"
+        when = f"{e.occurred_at:%Y-%m-%d %H:%M}Z"
+        print(f"{e.sequence:>5}  {when}  {agent}  {version}  {what}  {e.actor}")
+    return 0
+
+
+def cmd_audit_verify(args: argparse.Namespace, env: Mapping[str, str]) -> int:
+    events, records = open_store(args).load_all()
+    result = verify(events, records)
+    for note in result.notes:
+        print(f"note: {note}")
+    for problem in result.problems:
+        print(f"problem: {problem}", file=sys.stderr)
+    if not result.ok:
+        print(f"audit log NOT intact: {len(result.problems)} problem(s)", file=sys.stderr)
+        return 1
+    print(f"audit log intact: {result.events} events, {len(records)} records checked")
+    return 0
+
+
+def cmd_audit_export(args: argparse.Namespace, env: Mapping[str, str]) -> int:
+    text = to_csv(_filtered(args, open_store(args)))
+    if args.output is None:
+        print(text, end="")
+    else:
+        args.output.write_text(text, encoding="utf-8", newline="")
+        print(f"wrote {args.output}")
     return 0
 
 
@@ -215,6 +372,24 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_argument("agent")
     sub.add_argument("version", type=int)
     sub.set_defaults(func=cmd_show)
+
+    audit = commands.add_parser("audit", help="the audit log (list, verify, export)")
+    audit_actions = audit.add_subparsers(dest="action", required=True)
+    filters = argparse.ArgumentParser(add_help=False)
+    filters.add_argument("--agent", help="only events for this agent")
+    filters.add_argument("--since", type=date.fromisoformat, help="from this day, YYYY-MM-DD")
+    filters.add_argument("--until", type=date.fromisoformat, help="up to this day, YYYY-MM-DD")
+
+    sub = audit_actions.add_parser("list", parents=[where, filters], help="show events")
+    sub.set_defaults(func=cmd_audit_list)
+    sub = audit_actions.add_parser(
+        "verify", parents=[where], help="check the chain and that events match records"
+    )
+    sub.set_defaults(func=cmd_audit_verify)
+    sub = audit_actions.add_parser("export", parents=[where, filters], help="events as CSV")
+    sub.add_argument("--format", choices=["csv"], default="csv", help="file format (csv)")
+    sub.add_argument("--output", "-o", type=Path, help="write to this file instead of the screen")
+    sub.set_defaults(func=cmd_audit_export)
     return parser
 
 

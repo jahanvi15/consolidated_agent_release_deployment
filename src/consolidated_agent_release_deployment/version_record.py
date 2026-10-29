@@ -34,19 +34,19 @@ IGNORED_PARTS = frozenset({"__pycache__", ".git", ".venv", ".mypy_cache", ".pyte
 IGNORED_SUFFIXES = frozenset({".pyc", ".pyo"})
 
 
-class _Strict(BaseModel):
+class StrictModel(BaseModel):
     """Shared settings: unknown fields are errors and objects can't be changed."""
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
 
-class ModelInfo(_Strict):
+class ModelInfo(StrictModel):
     provider: str
     name: str
     settings: dict[str, Scalar] = Field(default_factory=dict)
 
 
-class RecordContent(_Strict):
+class RecordContent(StrictModel):
     """Everything that defines the agent. The fingerprint is computed from this alone."""
 
     description: str
@@ -69,7 +69,7 @@ class RecordContent(_Strict):
         return files
 
 
-class Source(_Strict):
+class Source(StrictModel):
     """Where and from what the version was built. Platform details live only here."""
 
     platform: Literal["local", "github-actions"]
@@ -82,7 +82,7 @@ class Source(_Strict):
     run_url: str | None = None
 
 
-class VersionRecord(_Strict):
+class VersionRecord(StrictModel):
     schema_version: Literal[1] = RECORD_SCHEMA_VERSION
     agent: str
     version: int = Field(ge=1)
