@@ -20,8 +20,8 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
   "Typing :: Typed",
 ]
-# Runtime dependencies stay empty until an ADR approves one (see CLAUDE.md).
-dependencies = []
+# Every runtime dependency needs an ADR (see CLAUDE.md). pydantic: ADR 0008.
+dependencies = ["pydantic>=2.7,<3"]
 
 [project.optional-dependencies]
 dev = [
@@ -87,3 +87,4 @@ files = ["src", "sample_agents", "tests"]
 mypy_path = ["src", "."]
 explicit_package_bases = true
 warn_unreachable = true
+plugins = ["pydantic.mypy"]
