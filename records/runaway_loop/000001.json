@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "agent": "runaway_loop",
+  "version": 1,
+  "fingerprint": "sha256:f8b437056b6b9dcf5d02a5fd0e07ff25344f0a0f498a1013bfcc4b8c6c3eef12",
+  "created_at": "2026-10-29T21:52:20Z",
+  "created_by": "jahanvi15",
+  "content": {
+    "description": "Exercises the step-budget check (S1-4). Declares a 5-step budget, then keeps searching.",
+    "entrypoint": "agent.py:run",
+    "declared_tools": [
+      "search"
+    ],
+    "max_steps": 5,
+    "model": null,
+    "prompts": [],
+    "config": {},
+    "env": [],
+    "dependencies": [],
+    "files": {
+      "__init__.py": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "agent.py": "sha256:52350aca5c6ccc8ed487b73c32e6c699e0201c9a1727790fd991ff7b56a3ce7c",
+      "agent.toml": "sha256:39b144638cebb5300f5e61a72b3526e810d9cc292a1e59371b17e606021899d1",
+      "expected.toml": "sha256:2cf623e9750df110248f9ef9e6b8ce42da7bec8d489c3e8be770addc31a06b01"
+    }
+  },
+  "source": {
+    "platform": "github-actions",
+    "agent_path": "sample_agents/runaway_loop",
+    "commit": "e60455daa2141e897575f41eff05c881f131c3e3",
+    "uncommitted_changes": false,
+    "repository": "jahanvi15/consolidated_agent_release_deployment",
+    "ref": "refs/heads/main",
+    "run_id": "40961346893",
+    "run_url": "https://github.com/jahanvi15/consolidated_agent_release_deployment/actions/runs/40961346893"
+  }
+}
