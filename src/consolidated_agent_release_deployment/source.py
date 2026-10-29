@@ -56,3 +56,11 @@ def _github_source(
         run_id=run_id,
         run_url=run_url,
     )
+
+
+def write_github_summary(env: Mapping[str, str], markdown: str) -> None:
+    """Add ``markdown`` to the run's summary page. Does nothing outside GitHub Actions."""
+    path = env.get("GITHUB_STEP_SUMMARY")
+    if path:
+        with Path(path).open("a", encoding="utf-8") as f:
+            f.write(markdown)

@@ -14,5 +14,6 @@ old one's status to `Superseded by NNNN`.
 | 0006 | [Merge commits; one branch per feature as work starts](0006-merge-commits-and-branch-per-feature.md) | Accepted | 2026-10-23 |
 | 0007 | [Agent manifest format: flat TOML, versioned, strict, all errors at once](0007-agent-manifest-format.md) | Proposed | 2026-10-23 |
 | 0008 | [Version record: JSON, append-only, on a separate Git branch](0008-version-record.md) | Proposed | 2026-10-30 |
+| 0009 | [Audit log: hash-chained events, saved with the records](0009-audit-log.md) | Proposed | 2026-10-30 |
 
 New ADR: copy [`0000-template.md`](0000-template.md).

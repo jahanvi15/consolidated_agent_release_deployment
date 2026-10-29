@@ -1,7 +1,8 @@
 # Reusable GitHub Action: record a new version of every agent that changed.
 #
 # On a pull request it only previews (prints the record, saves nothing).
-# On any other event it saves new records on the records branch and pushes it.
+# On any other event it saves new records and audit events on the records branch,
+# pushes it, and adds a table of what happened to the run's summary page.
 #
 # The calling workflow needs:
 #   permissions:
@@ -60,9 +61,13 @@ runs:
         BRANCH: ${{ inputs.branch }}
       run: |
         git fetch --quiet origin "$BRANCH:refs/heads/$BRANCH" 2>/dev/null || true
+        # A refused agent makes the command fail (exit 1), but its audit event was still
+        # saved. So remember the result, push anyway, and only then fail the step.
+        result=0
         # shellcheck disable=SC2086  # PATHS is a space-separated list on purpose
-        consolidated-agent-release-deployment record create --branch "$BRANCH" $PATHS
-        # Push only if the branch exists (it doesn't until the first record is made).
+        consolidated-agent-release-deployment record create --branch "$BRANCH" $PATHS || result=$?
+        # Push only if the branch exists (it doesn't if nothing was ever saved).
         if git rev-parse --verify --quiet "refs/heads/$BRANCH" >/dev/null; then
           git push --quiet origin "refs/heads/$BRANCH:refs/heads/$BRANCH"
         fi
+        exit "$result"
